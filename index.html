@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pengumuman Kelulusan</title>
+  <title>Pengumuman Kelulusan SMK Negeri 1 Kotamobagu</title>
   
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
@@ -41,7 +41,7 @@
     .text-glow-green { text-shadow: 0 0 20px rgba(74, 222, 128, 0.5); }
   </style>
 </head>
-<body class="h-full">
+<body class="h-full flex flex-col">
   <div id="starfield" class="fixed inset-0 pointer-events-none"></div>
 
   <!-- OVERLAY HITUNG MUNDUR -->
@@ -49,14 +49,16 @@
     <div id="number-display" class="count-number serif text-amber-400">3</div>
   </div>
 
-  <div id="app-container" class="relative z-10 min-h-full flex flex-col items-center px-4 py-12">
+  <div id="app-container" class="relative z-10 flex-grow flex flex-col items-center px-4 py-12">
     <!-- Section: Landing -->
     <section id="section-countdown" class="w-full max-w-3xl text-center">
-      <img id="display-logo" src="" class="w-24 mx-auto mb-8" alt="Logo">
-      <header class="inline-block rounded-full px-4 py-2 mb-8 border border-amber-400/30 bg-amber-400/10">
-        <span id="display-school-name" class="text-xs sm:text-sm font-medium text-amber-100"></span>
+      <img id="display-logo" src="" class="w-24 mx-auto mb-6" alt="Logo">
+      <header class="inline-block rounded-full px-6 py-2 mb-6 border border-amber-400/30 bg-amber-400/10">
+        <span id="display-school-name" class="text-xs sm:text-sm font-bold tracking-widest text-amber-100 uppercase">SMK NEGERI 1 KOTAMOBAGU</span>
       </header>
-      <h1 class="serif text-4xl sm:text-6xl font-bold mb-4">Sebentar lagi,<br><span class="text-amber-400 italic">momen itu tiba</span></h1>
+      <div class="mb-4 text-amber-400 font-semibold tracking-widest uppercase text-sm">Tahun Pelajaran 2025/2026</div>
+      <h1 class="serif text-4xl sm:text-6xl font-bold mb-4">PENGUMUMAN RESMI<br><span class="text-amber-400 italic">Hasil Kelulusan</span></h1>
+      
       <div class="glass rounded-3xl p-8 my-10">
         <div class="grid grid-cols-4 gap-4">
           <div class="text-center"><div class="mono text-3xl sm:text-5xl font-bold" id="days">00</div><p class="text-xs opacity-50 uppercase mt-2">Hari</p></div>
@@ -65,47 +67,62 @@
           <div class="text-center"><div class="mono text-3xl sm:text-5xl font-bold text-amber-400" id="seconds">00</div><p class="text-xs text-amber-400 uppercase mt-2">Detik</p></div>
         </div>
       </div>
-      <button id="btn-to-login" disabled class="px-8 py-4 rounded-xl font-bold opacity-50 cursor-not-allowed border-2 border-amber-400/50 text-amber-400 flex items-center gap-2 mx-auto transition-all">
-        <i data-lucide="lock" class="w-5 h-5"></i> <span id="btn-text">Tunggu Waktu Pengumuman</span>
+      
+      <button id="btn-to-login" disabled class="px-10 py-4 rounded-xl font-bold opacity-50 cursor-not-allowed border-2 border-amber-400/50 text-amber-400 flex items-center gap-2 mx-auto transition-all">
+        <i data-lucide="lock" class="w-5 h-5"></i> <span id="btn-text">Menunggu Waktu Pengumuman</span>
       </button>
     </section>
 
     <!-- Section: Login -->
-    <section id="section-login" class="hidden w-full max-w-md mt-20">
-      <div class="glass p-8 rounded-3xl text-center">
-        <h2 class="serif text-2xl font-bold mb-6 text-white">Input NISN Siswa</h2>
-        <form id="form-nisn" class="space-y-4">
-          <input type="text" id="input-nisn" maxlength="10" placeholder="10 Digit NISN" class="w-full px-4 py-4 rounded-xl bg-white text-slate-900 font-bold text-center text-xl outline-none">
-          <button type="submit" class="btn-gradient w-full py-4 rounded-xl font-bold transition-transform active:scale-95">Periksa Kelulusan</button>
+    <section id="section-login" class="hidden w-full max-w-md mt-10">
+      <div class="glass p-8 rounded-3xl text-center shadow-2xl">
+        <h2 class="serif text-2xl font-bold mb-2 text-white">Cek Kelulusan</h2>
+        <p class="text-slate-400 text-sm mb-8">Masukkan NISN Anda untuk melihat hasil kelulusan</p>
+        
+        <form id="form-nisn" class="space-y-6">
+          <div class="text-left">
+            <label class="text-[10px] uppercase tracking-widest text-amber-400 ml-1 mb-2 block font-bold">Nomor Induk Siswa Nasional (NISN)</label>
+            <input type="text" id="input-nisn" maxlength="10" placeholder="Contoh: 0071234567" class="w-full px-4 py-4 rounded-xl bg-white text-slate-900 font-bold text-center text-xl outline-none focus:ring-4 focus:ring-amber-400/20 transition-all">
+          </div>
+          <button type="submit" class="btn-gradient w-full py-4 rounded-xl font-bold text-lg shadow-lg shadow-amber-500/20 transform active:scale-95 transition-all">Cek Kelulusan</button>
         </form>
-        <p id="error-msg" class="text-red-400 mt-4 hidden italic">NISN tidak ditemukan!</p>
+        
+        <div class="mt-8 pt-6 border-t border-white/5 text-slate-400 text-xs leading-relaxed italic">
+          NISN Anda terdiri dari 10 digit angka. Jika mengalami kendala, silakan hubungi pihak sekolah.
+        </div>
+        <p id="error-msg" class="text-red-400 mt-4 hidden font-bold">NISN tidak ditemukan! Periksa kembali nomor Anda.</p>
       </div>
     </section>
 
     <!-- Section: Result -->
-    <section id="section-result" class="hidden w-full max-w-2xl mt-20">
+    <section id="section-result" class="hidden w-full max-w-2xl mt-10">
       <div id="result-card" class="glass p-10 rounded-3xl text-center"></div>
     </section>
   </div>
 
-  <!-- TOMBOL ADMIN (Dipulihkan) -->
+  <!-- Footer -->
+  <footer class="relative z-10 w-full py-8 text-center text-slate-500 text-xs border-t border-white/5 bg-black/20">
+    <p>© 2026 SMK Negeri 1 Kotamobagu. Sistem Pengumuman Kelulusan</p>
+  </footer>
+
+  <!-- TOMBOL ADMIN -->
   <div class="fixed bottom-4 right-4 z-50">
     <button onclick="openAdmin()" class="p-3 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 transition-all text-white/20 hover:text-white/60">
       <i data-lucide="lock" class="w-4 h-4"></i>
     </button>
   </div>
 
-  <!-- PANEL ADMIN (Dipulihkan) -->
-  <div id="admin-panel" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+  <!-- PANEL ADMIN -->
+  <div id="admin-panel" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
     <div class="glass w-full max-w-md p-8 rounded-3xl relative overflow-y-auto max-h-[90vh]">
       <button onclick="closeAdmin()" class="absolute top-4 right-4 opacity-50 hover:opacity-100"><i data-lucide="x" class="w-6 h-6"></i></button>
-      <h2 class="serif text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="settings" class="w-5 h-5 text-amber-400"></i> Pengaturan</h2>
+      <h2 class="serif text-xl font-bold mb-6 flex items-center gap-2 text-amber-400"><i data-lucide="settings" class="w-5 h-5"></i> Pengaturan Sistem</h2>
       <div class="space-y-4 text-left text-slate-300">
-        <div><label class="text-[10px] uppercase tracking-widest ml-1">Nama Sekolah</label><input type="text" id="admin-school-name" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white"></div>
-        <div><label class="text-[10px] uppercase tracking-widest ml-1">Link Logo URL</label><input type="text" id="admin-logo-url" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white"></div>
-        <div><label class="text-[10px] uppercase tracking-widest ml-1">Link CSV Google Sheets</label><input type="text" id="admin-csv" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white"></div>
-        <div><label class="text-[10px] uppercase tracking-widest ml-1">Waktu Pengumuman</label><input type="datetime-local" id="admin-date" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white"></div>
-        <button onclick="saveAdminSettings()" class="btn-gradient w-full py-3 rounded-xl font-bold mt-4">Simpan Perubahan</button>
+        <div><label class="text-[10px] uppercase tracking-widest ml-1">Nama Sekolah</label><input type="text" id="admin-school-name" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white outline-none focus:border-amber-400"></div>
+        <div><label class="text-[10px] uppercase tracking-widest ml-1">Link Logo URL</label><input type="text" id="admin-logo-url" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white outline-none focus:border-amber-400"></div>
+        <div><label class="text-[10px] uppercase tracking-widest ml-1">Link CSV Data Siswa</label><input type="text" id="admin-csv" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white outline-none focus:border-amber-400"></div>
+        <div><label class="text-[10px] uppercase tracking-widest ml-1">Waktu Buka Pengumuman</label><input type="datetime-local" id="admin-date" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white outline-none focus:border-amber-400"></div>
+        <button onclick="saveAdminSettings()" class="btn-gradient w-full py-4 rounded-xl font-bold mt-4 shadow-lg shadow-amber-500/20">Simpan Konfigurasi</button>
       </div>
     </div>
   </div>
@@ -122,12 +139,13 @@
     const audioBeep = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
     const audioSuccess = new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3');
 
-    document.getElementById('display-school-name').innerText = config.schoolName;
-    document.getElementById('display-logo').src = config.logoUrl;
+    function applyConfig() {
+      document.querySelectorAll('#display-school-name').forEach(el => el.innerText = config.schoolName);
+      document.getElementById('display-logo').src = config.logoUrl;
+    }
 
-    // Admin Functions (Dipulihkan)[cite: 1]
     function openAdmin() {
-      if (prompt("Password Admin:") === "admin123") {
+      if (prompt("Masukkan Password Keamanan:") === "admin123") {
         document.getElementById('admin-school-name').value = config.schoolName;
         document.getElementById('admin-logo-url').value = config.logoUrl;
         document.getElementById('admin-csv').value = config.csv;
@@ -153,7 +171,7 @@
           const c = r.split(',');
           return { nisn: c[2]?.trim(), nama: c[3]?.trim(), jurusan: c[8]?.trim(), status: c[9]?.trim(), skl: c[10]?.trim() };
         });
-      } catch (e) { console.error("CSV Load Error"); }
+      } catch (e) { console.error("Database connection failed"); }
     }
 
     function updateCountdown() {
@@ -161,8 +179,8 @@
       const btn = document.getElementById('btn-to-login');
       if (diff <= 0) {
         btn.disabled = false; btn.classList.remove('opacity-50', 'cursor-not-allowed');
-        btn.classList.add('btn-gradient', 'text-slate-900');
-        document.getElementById('btn-text').innerText = "Cek Hasil Kelulusan Sekarang";
+        btn.classList.add('btn-gradient', 'text-slate-900', 'scale-105');
+        document.getElementById('btn-text').innerText = "Buka Form Pengumuman";
         return;
       }
       const d = Math.floor(diff / 864e5), h = Math.floor((diff % 864e5) / 36e5), m = Math.floor((diff % 36e5) / 6e4), s = Math.floor((diff % 6e4) / 1e3);
@@ -175,13 +193,17 @@
     document.getElementById('btn-to-login').onclick = () => {
       document.getElementById('section-countdown').classList.add('hidden');
       document.getElementById('section-login').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     document.getElementById('form-nisn').onsubmit = (e) => {
       e.preventDefault();
       const input = document.getElementById('input-nisn').value.trim();
       const s = studentsData.find(x => x.nisn === input);
-      if (s) { startCountdownAnimation(() => showResult(s)); }
+      if (s) { 
+        document.getElementById('error-msg').classList.add('hidden');
+        startCountdownAnimation(() => showResult(s)); 
+      }
       else { document.getElementById('error-msg').classList.remove('hidden'); }
     };
 
@@ -225,14 +247,15 @@
           <h2 class="serif text-5xl font-black text-red-400 mb-8 tracking-wider">BELUM LULUS</h2>
         `}
         <div class="bg-white/5 rounded-2xl p-6 mb-8 border border-white/10 text-left">
-          <div class="mb-4 border-b border-white/5 pb-4"><p class="text-violet-300 text-[10px] uppercase tracking-widest mb-1">Nama Lengkap</p><p class="text-xl font-bold text-white uppercase">${s.nama}</p></div>
-          <div class="mb-4"><p class="text-violet-300 text-[10px] uppercase tracking-widest mb-1">NISN</p><p class="mono text-lg text-white/80">${s.nisn}</p></div>
-          <div><p class="text-violet-300 text-[10px] uppercase tracking-widest mb-1">Konsentrasi Keahlian</p><p class="text-lg font-semibold text-amber-400">${s.jurusan || '-'}</p></div>
+          <div class="mb-4 border-b border-white/5 pb-4"><p class="text-violet-300 text-[10px] uppercase tracking-widest mb-1">Nama Lengkap Siswa</p><p class="text-xl font-bold text-white uppercase">${s.nama}</p></div>
+          <div class="mb-4"><p class="text-violet-300 text-[10px] uppercase tracking-widest mb-1">Nomor Induk Siswa Nasional (NISN)</p><p class="mono text-lg text-white/80">${s.nisn}</p></div>
+          <div><p class="text-violet-300 text-[10px] uppercase tracking-widest mb-1">Konsentrasi Keahlian / Jurusan</p><p class="text-lg font-semibold text-amber-400">${s.jurusan || '-'}</p></div>
         </div>
-        ${isLulus && s.skl ? `<a href="${s.skl}" target="_blank" class="btn-gradient px-10 py-4 rounded-xl font-bold inline-flex items-center gap-2 transform hover:scale-105 transition-all shadow-lg shadow-amber-500/20"><i data-lucide="download" class="w-5 h-5"></i> Unduh SKL (PDF)</a>` : ''}
+        ${isLulus && s.skl ? `<a href="${s.skl}" target="_blank" class="btn-gradient px-10 py-4 rounded-xl font-bold inline-flex items-center gap-2 transform hover:scale-105 transition-all shadow-xl shadow-amber-500/20"><i data-lucide="download" class="w-5 h-5"></i> Unduh SKL (PDF)</a>` : ''}
         <button onclick="location.reload()" class="block w-full mt-10 text-white/30 text-sm hover:text-white/60 transition-colors italic border-t border-white/5 pt-4">Kembali ke Beranda</button>
       `;
       lucide.createIcons();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     const field = document.getElementById('starfield');
@@ -245,6 +268,7 @@
       field.appendChild(star);
     }
 
+    applyConfig();
     loadData();
     setInterval(updateCountdown, 1000);
     lucide.createIcons();
