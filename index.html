@@ -7,7 +7,6 @@
   
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
-  <!-- Library Animasi Perayaan (Confetti) -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   
@@ -17,15 +16,11 @@
     .serif { font-family: 'Fraunces', serif; }
     .mono { font-family: 'JetBrains Mono', monospace; }
     .glass { background: rgba(21, 26, 58, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
-    
-    /* Efek Bintang Latar Belakang */
     .star { position: absolute; background: white; border-radius: 50%; animation: twinkle 3s infinite; }
     @keyframes twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
-    
     .hidden { display: none !important; }
     .btn-gradient { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: #0a0e27; }
 
-    /* Overlay Animasi Hitung Mundur */
     #countdown-overlay {
       background: rgba(10, 14, 39, 0.95);
       display: none;
@@ -55,7 +50,7 @@
   </div>
 
   <div id="app-container" class="relative z-10 min-h-full flex flex-col items-center px-4 py-12">
-    <!-- Section: Landing & Countdown Utama -->
+    <!-- Section: Landing -->
     <section id="section-countdown" class="w-full max-w-3xl text-center">
       <img id="display-logo" src="" class="w-24 mx-auto mb-8" alt="Logo">
       <header class="inline-block rounded-full px-4 py-2 mb-8 border border-amber-400/30 bg-amber-400/10">
@@ -75,7 +70,7 @@
       </button>
     </section>
 
-    <!-- Section: Login / Cek NISN -->
+    <!-- Section: Login -->
     <section id="section-login" class="hidden w-full max-w-md mt-20">
       <div class="glass p-8 rounded-3xl text-center">
         <h2 class="serif text-2xl font-bold mb-6 text-white">Input NISN Siswa</h2>
@@ -87,14 +82,35 @@
       </div>
     </section>
 
-    <!-- Section: Hasil Kelulusan -->
+    <!-- Section: Result -->
     <section id="section-result" class="hidden w-full max-w-2xl mt-20">
       <div id="result-card" class="glass p-10 rounded-3xl text-center"></div>
     </section>
   </div>
 
+  <!-- TOMBOL ADMIN (Dipulihkan) -->
+  <div class="fixed bottom-4 right-4 z-50">
+    <button onclick="openAdmin()" class="p-3 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 transition-all text-white/20 hover:text-white/60">
+      <i data-lucide="lock" class="w-4 h-4"></i>
+    </button>
+  </div>
+
+  <!-- PANEL ADMIN (Dipulihkan) -->
+  <div id="admin-panel" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="glass w-full max-w-md p-8 rounded-3xl relative overflow-y-auto max-h-[90vh]">
+      <button onclick="closeAdmin()" class="absolute top-4 right-4 opacity-50 hover:opacity-100"><i data-lucide="x" class="w-6 h-6"></i></button>
+      <h2 class="serif text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="settings" class="w-5 h-5 text-amber-400"></i> Pengaturan</h2>
+      <div class="space-y-4 text-left text-slate-300">
+        <div><label class="text-[10px] uppercase tracking-widest ml-1">Nama Sekolah</label><input type="text" id="admin-school-name" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white"></div>
+        <div><label class="text-[10px] uppercase tracking-widest ml-1">Link Logo URL</label><input type="text" id="admin-logo-url" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white"></div>
+        <div><label class="text-[10px] uppercase tracking-widest ml-1">Link CSV Google Sheets</label><input type="text" id="admin-csv" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white"></div>
+        <div><label class="text-[10px] uppercase tracking-widest ml-1">Waktu Pengumuman</label><input type="datetime-local" id="admin-date" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white"></div>
+        <button onclick="saveAdminSettings()" class="btn-gradient w-full py-3 rounded-xl font-bold mt-4">Simpan Perubahan</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // Konfigurasi & LocalStorage
     let config = {
       csv: localStorage.getItem('cfg_csv') || 'URL_CSV_ANDA',
       target: localStorage.getItem('cfg_date') || '2026-05-04T15:00:00',
@@ -103,15 +119,31 @@
     };
 
     let studentsData = [];
-    
-    // Audio Resources[cite: 1]
     const audioBeep = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
     const audioSuccess = new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3');
 
     document.getElementById('display-school-name').innerText = config.schoolName;
     document.getElementById('display-logo').src = config.logoUrl;
 
-    // Load Data dari Google Sheets[cite: 1]
+    // Admin Functions (Dipulihkan)[cite: 1]
+    function openAdmin() {
+      if (prompt("Password Admin:") === "admin123") {
+        document.getElementById('admin-school-name').value = config.schoolName;
+        document.getElementById('admin-logo-url').value = config.logoUrl;
+        document.getElementById('admin-csv').value = config.csv;
+        document.getElementById('admin-date').value = config.target.substring(0, 16);
+        document.getElementById('admin-panel').classList.remove('hidden');
+      }
+    }
+    function closeAdmin() { document.getElementById('admin-panel').classList.add('hidden'); }
+    function saveAdminSettings() {
+      localStorage.setItem('cfg_name', document.getElementById('admin-school-name').value);
+      localStorage.setItem('cfg_logo', document.getElementById('admin-logo-url').value);
+      localStorage.setItem('cfg_csv', document.getElementById('admin-csv').value);
+      localStorage.setItem('cfg_date', document.getElementById('admin-date').value);
+      location.reload();
+    }
+
     async function loadData() {
       try {
         const res = await fetch(config.csv);
@@ -119,18 +151,11 @@
         const rows = text.split('\n').slice(1);
         studentsData = rows.map(r => {
           const c = r.split(',');
-          return { 
-            nisn: c[2]?.trim(), 
-            nama: c[3]?.trim(), 
-            jurusan: c[8]?.trim(), // Mengambil Konsentrasi Keahlian[cite: 1]
-            status: c[9]?.trim(), 
-            skl: c[10]?.trim() 
-          };
+          return { nisn: c[2]?.trim(), nama: c[3]?.trim(), jurusan: c[8]?.trim(), status: c[9]?.trim(), skl: c[10]?.trim() };
         });
-      } catch (e) { console.error("Gagal memuat data CSV"); }
+      } catch (e) { console.error("CSV Load Error"); }
     }
 
-    // Timer Countdown Utama
     function updateCountdown() {
       const diff = new Date(config.target) - new Date();
       const btn = document.getElementById('btn-to-login');
@@ -152,17 +177,12 @@
       document.getElementById('section-login').classList.remove('hidden');
     };
 
-    // Logika Cek NISN dengan Animasi[cite: 1]
     document.getElementById('form-nisn').onsubmit = (e) => {
       e.preventDefault();
       const input = document.getElementById('input-nisn').value.trim();
       const s = studentsData.find(x => x.nisn === input);
-      if (s) {
-        document.getElementById('error-msg').classList.add('hidden');
-        startCountdownAnimation(() => showResult(s));
-      } else {
-        document.getElementById('error-msg').classList.remove('hidden');
-      }
+      if (s) { startCountdownAnimation(() => showResult(s)); }
+      else { document.getElementById('error-msg').classList.remove('hidden'); }
     };
 
     function startCountdownAnimation(callback) {
@@ -172,49 +192,32 @@
       let count = 3;
       display.innerText = count;
       audioBeep.play();
-      
       const timer = setInterval(() => {
         count--;
-        if (count > 0) {
-          display.innerText = count;
-          audioBeep.play();
-        } else {
-          clearInterval(timer);
-          overlay.style.display = 'none';
-          callback();
-        }
+        if (count > 0) { display.innerText = count; audioBeep.play(); }
+        else { clearInterval(timer); overlay.style.display = 'none'; callback(); }
       }, 1000);
     }
 
-    // Animasi Perayaan Bintang & Bunga Api[cite: 1]
     function celebrate() {
       const duration = 4 * 1000;
       const end = Date.now() + duration;
-
       (function frame() {
         confetti({ particleCount: 7, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#fbbf24', '#ffffff', '#4ade80'] });
         confetti({ particleCount: 7, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#fbbf24', '#ffffff', '#4ade80'] });
         if (Date.now() < end) requestAnimationFrame(frame);
       }());
-      
       confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, shapes: ['star'] });
     }
 
-    // Menampilkan Hasil Akhir[cite: 1]
     function showResult(s) {
       document.getElementById('section-login').classList.add('hidden');
       document.getElementById('section-result').classList.remove('hidden');
       const isLulus = s.status?.toUpperCase() === 'LULUS';
-      
-      if(isLulus) {
-        audioSuccess.play();
-        celebrate();
-      }
+      if(isLulus) { audioSuccess.play(); celebrate(); }
 
       document.getElementById('result-card').innerHTML = `
-        <div class="mb-6">
-          <i data-lucide="${isLulus ? 'party-popper' : 'frown'}" class="w-20 h-20 mx-auto ${isLulus ? 'text-green-400' : 'text-red-400'}"></i>
-        </div>
+        <div class="mb-6"><i data-lucide="${isLulus ? 'party-popper' : 'frown'}" class="w-20 h-20 mx-auto ${isLulus ? 'text-green-400' : 'text-red-400'}"></i></div>
         ${isLulus ? `
           <h3 class="serif text-2xl text-green-400 font-bold mb-2 text-glow-green">Selamat! Anda dinyatakan</h3>
           <h2 class="serif text-6xl font-black text-green-400 mb-8 tracking-wider">LULUS</h2>
@@ -222,30 +225,16 @@
           <h2 class="serif text-5xl font-black text-red-400 mb-8 tracking-wider">BELUM LULUS</h2>
         `}
         <div class="bg-white/5 rounded-2xl p-6 mb-8 border border-white/10 text-left">
-          <div class="mb-4 border-b border-white/5 pb-4">
-            <p class="text-violet-300 text-[10px] uppercase tracking-widest mb-1">Nama Lengkap</p>
-            <p class="text-xl font-bold text-white uppercase">${s.nama}</p>
-          </div>
-          <div class="mb-4">
-            <p class="text-violet-300 text-[10px] uppercase tracking-widest mb-1">NISN</p>
-            <p class="mono text-lg text-white/80">${s.nisn}</p>
-          </div>
-          <div>
-            <p class="text-violet-300 text-[10px] uppercase tracking-widest mb-1">Konsentrasi Keahlian</p>
-            <p class="text-lg font-semibold text-amber-400">${s.jurusan || '-'}</p>
-          </div>
+          <div class="mb-4 border-b border-white/5 pb-4"><p class="text-violet-300 text-[10px] uppercase tracking-widest mb-1">Nama Lengkap</p><p class="text-xl font-bold text-white uppercase">${s.nama}</p></div>
+          <div class="mb-4"><p class="text-violet-300 text-[10px] uppercase tracking-widest mb-1">NISN</p><p class="mono text-lg text-white/80">${s.nisn}</p></div>
+          <div><p class="text-violet-300 text-[10px] uppercase tracking-widest mb-1">Konsentrasi Keahlian</p><p class="text-lg font-semibold text-amber-400">${s.jurusan || '-'}</p></div>
         </div>
-        ${isLulus && s.skl ? `
-          <a href="${s.skl}" target="_blank" class="btn-gradient px-10 py-4 rounded-xl font-bold inline-flex items-center gap-2 transform hover:scale-105 transition-all shadow-lg shadow-amber-500/20">
-            <i data-lucide="download" class="w-5 h-5"></i> Unduh SKL (PDF)
-          </a>
-        ` : ''}
+        ${isLulus && s.skl ? `<a href="${s.skl}" target="_blank" class="btn-gradient px-10 py-4 rounded-xl font-bold inline-flex items-center gap-2 transform hover:scale-105 transition-all shadow-lg shadow-amber-500/20"><i data-lucide="download" class="w-5 h-5"></i> Unduh SKL (PDF)</a>` : ''}
         <button onclick="location.reload()" class="block w-full mt-10 text-white/30 text-sm hover:text-white/60 transition-colors italic border-t border-white/5 pt-4">Kembali ke Beranda</button>
       `;
       lucide.createIcons();
     }
 
-    // Efek Latar Belakang Bintang
     const field = document.getElementById('starfield');
     for (let i = 0; i < 70; i++) {
       const star = document.createElement('div');
