@@ -13,12 +13,10 @@ body {
   color: white;
   font-family: sans-serif;
 }
-
 .card {
   background: rgba(255,255,255,0.05);
   backdrop-filter: blur(10px);
 }
-
 .btn {
   background: linear-gradient(135deg,#3b82f6,#06b6d4);
 }
@@ -34,7 +32,7 @@ body {
 <input id="nisn" type="text" placeholder="Masukkan NISN"
 class="w-full p-3 rounded text-black mb-3">
 
-<button onclick="cek()" class="btn w-full py-3 rounded font-bold">
+<button id="btn" onclick="cek()" class="btn w-full py-3 rounded font-bold">
 Cek Kelulusan
 </button>
 
@@ -46,29 +44,83 @@ Cek Kelulusan
 
 <script>
 // ================= CONFIG =================
-const SHEET_ID = 'ISI_DENGAN_ID_SPREADSHEET_KAMU';
+const SHEET_ID = 'ISI_ID_SPREADSHEET';
 const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
 
 let data = [];
 let attempts = 0;
+let loaded = false;
+
+// ================= CSV PARSER AMAN =================
+function parseCSV(text) {
+  const rows = [];
+  let row = [], field = "", inQuotes = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const next = text[i + 1];
+
+    if (inQuotes) {
+      if (char === '"' && next === '"') {
+        field += '"';
+        i++;
+      } else if (char === '"') {
+        inQuotes = false;
+      } else {
+        field += char;
+      }
+    } else {
+      if (char === '"') {
+        inQuotes = true;
+      } else if (char === ',') {
+        row.push(field);
+        field = "";
+      } else if (char === '\n') {
+        row.push(field);
+        rows.push(row);
+        row = [];
+        field = "";
+      } else {
+        field += char;
+      }
+    }
+  }
+
+  if (field) {
+    row.push(field);
+    rows.push(row);
+  }
+
+  return rows;
+}
 
 // ================= LOAD DATA =================
+document.getElementById("msg").innerText = "Memuat data...";
+
 fetch(URL)
 .then(res => res.text())
 .then(text => {
-  const rows = text.split("\n").map(r => r.split(","));
-  
+  const rows = parseCSV(text);
+
   data = rows.slice(1).map(r => ({
-    nisn: r[2],
-    nama: r[3],
-    jurusan: r[8],
-    status: r[9],
-    skl: r[10]
+    nisn: (r[2] || "").trim(),
+    nama: (r[3] || "").trim(),
+    jurusan: (r[8] || "").trim(),
+    status: (r[9] || "").trim(),
+    skl: (r[10] || "").trim()
   }));
+
+  loaded = true;
+  document.getElementById("msg").innerText = "";
 })
 .catch(() => {
   document.getElementById("msg").innerText = "Gagal ambil data!";
 });
+
+// ================= SANITIZE =================
+function safe(text){
+  return text.replace(/[<>&"']/g, '');
+}
 
 // ================= CEK =================
 function cek(){
@@ -78,6 +130,11 @@ function cek(){
 
   msg.innerText = "";
   result.innerHTML = "";
+
+  if(!loaded){
+    msg.innerText = "Data belum siap...";
+    return;
+  }
 
   if(!nisn){
     msg.innerText = "NISN wajib diisi!";
@@ -90,7 +147,7 @@ function cek(){
     return;
   }
 
-  const siswa = data.find(s => s.nisn == nisn);
+  const siswa = data.find(s => s.nisn === nisn);
 
   if(!siswa){
     msg.innerText = "NISN tidak ditemukan!";
@@ -103,7 +160,6 @@ function cek(){
 // ================= COUNTDOWN =================
 function countdown(siswa){
   let count = 3;
-
   const result = document.getElementById("result");
 
   result.innerHTML = `<div class="text-6xl font-bold">${count}</div>`;
@@ -121,21 +177,21 @@ function countdown(siswa){
   },1000);
 }
 
-// ================= TAMPIL HASIL =================
+// ================= HASIL =================
 function tampilkan(s){
-  const lulus = s.status.toLowerCase().includes("lulus") && !s.status.toLowerCase().includes("tidak");
+  const lulus = /lulus/i.test(s.status) && !/tidak/i.test(s.status);
 
   if(lulus){
     document.getElementById("result").innerHTML = `
       <h2 class="text-3xl font-bold text-green-400">LULUS</h2>
-      <p class="mt-2">${s.nama}</p>
-      <p>${s.jurusan}</p>
+      <p class="mt-2">${safe(s.nama)}</p>
+      <p>${safe(s.jurusan)}</p>
       ${s.skl ? `<a href="${s.skl}" target="_blank" class="block mt-3 underline">Download SKL</a>` : ""}
     `;
   } else {
     document.getElementById("result").innerHTML = `
       <h2 class="text-3xl font-bold text-red-400">TIDAK LULUS</h2>
-      <p class="mt-2">${s.nama}</p>
+      <p class="mt-2">${safe(s.nama)}</p>
     `;
   }
 }
