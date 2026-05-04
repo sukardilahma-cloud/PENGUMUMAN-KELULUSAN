@@ -19,21 +19,43 @@
     @keyframes twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
     .hidden { display: none !important; }
     .btn-gradient { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: #0a0e27; }
+
+    /* Animasi Angka Countdown */
+    #countdown-overlay {
+      background: rgba(10, 14, 39, 0.95);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+    }
+    .count-number {
+      font-size: 15rem;
+      font-weight: 800;
+      animation: zoomFade 1s ease-in-out infinite;
+    }
+    @keyframes zoomFade {
+      0% { transform: scale(0.5); opacity: 0; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
   </style>
 </head>
 <body class="h-full">
   <div id="starfield" class="fixed inset-0 pointer-events-none"></div>
 
+  <!-- OVERLAY HITUNG MUNDUR -->
+  <div id="countdown-overlay" class="fixed inset-0">
+    <div id="number-display" class="count-number serif text-amber-400">3</div>
+  </div>
+
   <div id="app-container" class="relative z-10 min-h-full flex flex-col items-center px-4 py-12">
-    <!-- Section: Countdown -->
+    <!-- Section: Countdown Landing -->
     <section id="section-countdown" class="w-full max-w-3xl text-center">
       <img id="display-logo" src="" class="w-24 mx-auto mb-8" alt="Logo">
       <header class="inline-block rounded-full px-4 py-2 mb-8 border border-amber-400/30 bg-amber-400/10">
         <span id="display-school-name" class="text-xs sm:text-sm font-medium text-amber-100"></span>
       </header>
-
       <h1 class="serif text-4xl sm:text-6xl font-bold mb-4">Sebentar lagi,<br><span class="text-amber-400 italic">momen itu tiba</span></h1>
-      
       <div class="glass rounded-3xl p-8 my-10">
         <div class="grid grid-cols-4 gap-4">
           <div class="text-center"><div class="mono text-3xl sm:text-5xl font-bold" id="days">00</div><p class="text-xs opacity-50 uppercase mt-2">Hari</p></div>
@@ -42,7 +64,6 @@
           <div class="text-center"><div class="mono text-3xl sm:text-5xl font-bold text-amber-400" id="seconds">00</div><p class="text-xs text-amber-400 uppercase mt-2">Detik</p></div>
         </div>
       </div>
-
       <button id="btn-to-login" disabled class="px-8 py-4 rounded-xl font-bold opacity-50 cursor-not-allowed border-2 border-amber-400/50 text-amber-400 flex items-center gap-2 mx-auto transition-all">
         <i data-lucide="lock" class="w-5 h-5"></i> <span id="btn-text">Tunggu Waktu Pengumuman</span>
       </button>
@@ -66,43 +87,29 @@
     </section>
   </div>
 
-  <!-- ADMIN BUTTON (LOCK ICON) -->
+  <!-- ADMIN BUTTON -->
   <div class="fixed bottom-4 right-4 z-50">
     <button onclick="openAdmin()" class="p-3 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 transition-all text-white/20 hover:text-white/60">
       <i data-lucide="lock" class="w-4 h-4"></i>
     </button>
   </div>
 
-  <!-- ADMIN PANEL MODAL -->
+  <!-- ADMIN PANEL -->
   <div id="admin-panel" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-    <div class="glass w-full max-w-md p-8 rounded-3xl relative overflow-y-auto max-h-[90vh]">
+    <div class="glass w-full max-w-md p-8 rounded-3xl relative">
       <button onclick="closeAdmin()" class="absolute top-4 right-4 opacity-50 hover:opacity-100"><i data-lucide="x" class="w-6 h-6"></i></button>
-      <h2 class="serif text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="settings" class="w-5 h-5 text-amber-400"></i> Pengaturan Sistem</h2>
-      
+      <h2 class="serif text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="settings" class="w-5 h-5 text-amber-400"></i> Pengaturan</h2>
       <div class="space-y-4 text-left">
-        <div>
-          <label class="text-xs text-violet-300 uppercase font-bold">Nama Sekolah</label>
-          <input type="text" id="admin-school-name" class="w-full mt-1 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm outline-none focus:border-amber-400">
-        </div>
-        <div>
-          <label class="text-xs text-violet-300 uppercase font-bold">Link Logo Sekolah (URL)</label>
-          <input type="text" id="admin-logo-url" class="w-full mt-1 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm outline-none focus:border-amber-400">
-        </div>
-        <div>
-          <label class="text-xs text-violet-300 uppercase font-bold">Link CSV Google Sheets</label>
-          <input type="text" id="admin-csv" class="w-full mt-1 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm outline-none focus:border-amber-400">
-        </div>
-        <div>
-          <label class="text-xs text-violet-300 uppercase font-bold">Tanggal & Waktu Buka</label>
-          <input type="datetime-local" id="admin-date" class="w-full mt-1 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm outline-none focus:border-amber-400">
-        </div>
-        <button onclick="saveAdminSettings()" class="btn-gradient w-full py-3 rounded-xl font-bold mt-4">Simpan Semua Perubahan</button>
+        <input type="text" id="admin-school-name" placeholder="Nama Sekolah" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm">
+        <input type="text" id="admin-logo-url" placeholder="Link Logo URL" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm">
+        <input type="text" id="admin-csv" placeholder="Link CSV Google Sheets" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm">
+        <input type="datetime-local" id="admin-date" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm">
+        <button onclick="saveAdminSettings()" class="btn-gradient w-full py-3 rounded-xl font-bold">Simpan</button>
       </div>
     </div>
   </div>
 
   <script>
-    // --- CONFIGURATION ---
     let config = {
       csv: localStorage.getItem('cfg_csv') || 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7dKWe0slwGrGr6Q58QYTP1Plyh9_pv9jbPnh1Xo44mXmJfsHyQfQtPoKo50c1yw/pub?output=csv',
       target: localStorage.getItem('cfg_date') || '2026-05-04T15:00:00',
@@ -112,37 +119,31 @@
 
     let studentsData = [];
 
-    // --- APPLY INITIAL CONFIG ---
+    // --- AUDIO CONTEXT ---
+    const audioBeep = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
+    const audioSuccess = new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3');
+
     document.getElementById('display-school-name').innerText = config.schoolName;
     document.getElementById('display-logo').src = config.logoUrl;
-    
-    // --- ADMIN LOGIC ---
+
     function openAdmin() {
-      const pass = prompt("Masukkan Password Admin:");
-      if (pass === "admin123") {
+      if (prompt("Password Admin:") === "admin123") {
         document.getElementById('admin-school-name').value = config.schoolName;
         document.getElementById('admin-logo-url').value = config.logoUrl;
         document.getElementById('admin-csv').value = config.csv;
         document.getElementById('admin-date').value = config.target.substring(0, 16);
         document.getElementById('admin-panel').classList.remove('hidden');
-      } else if (pass !== null) {
-        alert("Password Salah!");
       }
     }
-
     function closeAdmin() { document.getElementById('admin-panel').classList.add('hidden'); }
-
     function saveAdminSettings() {
       localStorage.setItem('cfg_name', document.getElementById('admin-school-name').value);
       localStorage.setItem('cfg_logo', document.getElementById('admin-logo-url').value);
       localStorage.setItem('cfg_csv', document.getElementById('admin-csv').value);
       localStorage.setItem('cfg_date', document.getElementById('admin-date').value);
-      
-      alert("Pengaturan Berhasil Disimpan!");
       location.reload();
     }
 
-    // --- DATA & COUNTDOWN LOGIC ---
     async function loadData() {
       try {
         const res = await fetch(config.csv);
@@ -152,21 +153,18 @@
           const c = r.split(',');
           return { nisn: c[2]?.trim(), nama: c[3]?.trim(), status: c[9]?.trim(), skl: c[10]?.trim() };
         });
-      } catch (e) { console.error("Gagal memuat CSV"); }
+      } catch (e) { console.error("CSV Error"); }
     }
 
     function updateCountdown() {
       const diff = new Date(config.target) - new Date();
       const btn = document.getElementById('btn-to-login');
-
       if (diff <= 0) {
-        btn.disabled = false;
-        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+        btn.disabled = false; btn.classList.remove('opacity-50', 'cursor-not-allowed');
         btn.classList.add('btn-gradient', 'text-slate-900');
         document.getElementById('btn-text').innerText = "Cek Hasil Kelulusan Sekarang";
         return;
       }
-
       const d = Math.floor(diff / 864e5), h = Math.floor((diff % 864e5) / 36e5), m = Math.floor((diff % 36e5) / 6e4), s = Math.floor((diff % 6e4) / 1e3);
       document.getElementById('days').innerText = String(d).padStart(2, '0');
       document.getElementById('hours').innerText = String(h).padStart(2, '0');
@@ -174,39 +172,68 @@
       document.getElementById('seconds').innerText = String(s).padStart(2, '0');
     }
 
-    // --- NAVIGATION ---
     document.getElementById('btn-to-login').onclick = () => {
       document.getElementById('section-countdown').classList.add('hidden');
       document.getElementById('section-login').classList.remove('hidden');
     };
 
+    // --- LOGIC CEK DENGAN ANIMASI ---
     document.getElementById('form-nisn').onsubmit = (e) => {
       e.preventDefault();
       const input = document.getElementById('input-nisn').value.trim();
       const s = studentsData.find(x => x.nisn === input);
+      
       if (s) {
-        document.getElementById('section-login').classList.add('hidden');
-        document.getElementById('section-result').classList.remove('hidden');
-        const isLulus = s.status?.toUpperCase() === 'LULUS';
-        document.getElementById('result-card').innerHTML = `
-          <h2 class="serif text-4xl font-bold mb-4 ${isLulus ? 'text-green-400' : 'text-red-400'}">${isLulus ? 'LULUS' : 'BELUM LULUS'}</h2>
-          <p class="text-xl mb-6">${s.nama}<br><span class="opacity-50">${s.nisn}</span></p>
-          ${isLulus && s.skl ? `<a href="${s.skl}" target="_blank" class="btn-gradient px-8 py-3 rounded-xl font-bold inline-block">Download SKL</a>` : ''}
-          <button onclick="location.reload()" class="block w-full mt-8 opacity-30 text-sm italic">Kembali</button>
-        `;
-        lucide.createIcons();
+        startCountdownAnimation(() => showResult(s));
       } else {
         document.getElementById('error-msg').classList.remove('hidden');
       }
     };
 
-    // --- STARFIELD ---
+    function startCountdownAnimation(callback) {
+      const overlay = document.getElementById('countdown-overlay');
+      const display = document.getElementById('number-display');
+      overlay.style.display = 'flex';
+      
+      let count = 3;
+      display.innerText = count;
+      audioBeep.play();
+
+      const timer = setInterval(() => {
+        count--;
+        if (count > 0) {
+          display.innerText = count;
+          audioBeep.play();
+        } else {
+          clearInterval(timer);
+          overlay.style.display = 'none';
+          callback();
+        }
+      }, 1000);
+    }
+
+    function showResult(s) {
+      document.getElementById('section-login').classList.add('hidden');
+      document.getElementById('section-result').classList.remove('hidden');
+      const isLulus = s.status?.toUpperCase() === 'LULUS';
+      
+      if(isLulus) audioSuccess.play();
+
+      document.getElementById('result-card').innerHTML = `
+        <h2 class="serif text-4xl font-bold mb-4 ${isLulus ? 'text-green-400' : 'text-red-400'}">${isLulus ? 'LULUS' : 'BELUM LULUS'}</h2>
+        <p class="text-xl mb-6">${s.nama}<br><span class="opacity-50 text-sm">${s.nisn}</span></p>
+        ${isLulus && s.skl ? `<a href="${s.skl}" target="_blank" class="btn-gradient px-8 py-3 rounded-xl font-bold inline-block">Download SKL</a>` : ''}
+        <button onclick="location.reload()" class="block w-full mt-8 opacity-30 text-sm italic">Kembali</button>
+      `;
+      lucide.createIcons();
+    }
+
+    // Starfield Init
     const field = document.getElementById('starfield');
     for (let i = 0; i < 60; i++) {
       const star = document.createElement('div');
       star.className = 'star';
-      star.style.width = (Math.random() * 2 + 1) + 'px';
-      star.style.height = star.style.width;
+      star.style.width = (Math.random() * 2 + 1) + 'px'; star.style.height = star.style.width;
       star.style.left = Math.random() * 100 + '%'; star.style.top = Math.random() * 100 + '%';
       star.style.animationDelay = Math.random() * 3 + 's';
       field.appendChild(star);
