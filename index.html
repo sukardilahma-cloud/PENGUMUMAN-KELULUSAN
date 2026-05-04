@@ -1,225 +1,251 @@
 <!doctype html>
 <html lang="id" class="h-full">
- <head>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pengumuman Kelulusan - SMK Negeri 1 Kotamobagu</title>
+  <title>Pengumuman Kelulusan - SMKN 1 Kotamobagu</title>
   
-  <!-- Frameworks & Fonts -->
+  <!-- SDK & Frameworks -->
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --bg-primary: #0f172a;
-      --accent-blue: #0066ff;
-      --text-primary: #f1f5f9;
-      --text-secondary: #cbd5e1;
+      --bg-primary: #0a0e27;
+      --surface: #151a3a;
+      --text: #f5f3ff;
+      --primary-action: #fbbf24;
     }
-
-    * { font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; }
-    .font-display { font-family: 'Space Grotesk', sans-serif; }
 
     body {
-      background: linear-gradient(180deg, #0f172a 0%, #1a1f35 100%);
-      color: var(--text-primary);
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text);
       overflow-x: hidden;
-      min-height: 100%;
+      margin: 0;
     }
 
-    .animated-bg {
-      background:
-        radial-gradient(ellipse at top left, rgba(14, 165, 233, 0.12), transparent 50%),
-        radial-gradient(ellipse at top right, rgba(168, 85, 247, 0.12), transparent 50%),
-        linear-gradient(180deg, #0f172a 0%, #1a1f35 100%);
-      position: relative;
+    .serif { font-family: 'Fraunces', serif; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Starfield & Aurora Effects */
+    .starfield { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+    .star { position: absolute; background: white; border-radius: 50%; animation: twinkle 3s infinite; }
+    @keyframes twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+
+    .aurora {
+      position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse at 20% 30%, rgba(167, 139, 250, 0.2), transparent 60%);
     }
 
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(60px);
-      opacity: 0.25;
-      pointer-events: none;
-      animation: float 8s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(30px, -30px) scale(1.1); }
-    }
-
-    .glass-card {
-      background: rgba(30, 41, 59, 0.8);
+    .glass {
+      background: rgba(21, 26, 58, 0.5);
       backdrop-filter: blur(20px);
-      border: 1px solid rgba(0, 102, 255, 0.25);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
+
+    .hidden { display: none !important; }
+
+    /* Result Colors */
+    .text-lulus { color: #4ade80; text-shadow: 0 0 20px rgba(74, 222, 128, 0.5); }
+    .text-gagal { color: #f87171; }
 
     .btn-gradient {
-      background: linear-gradient(135deg, #0066ff 0%, #0099ff 100%);
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      color: #0a0e27;
       transition: all 0.3s ease;
     }
-
-    .btn-gradient:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(0, 102, 255, 0.5);
-    }
-
-    .spinner {
-      border: 3px solid rgba(255,255,255,0.2);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
-    .hidden { display: none; }
-    
-    .confetti {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      animation: confetti-fall 3s linear forwards;
-    }
-    @keyframes confetti-fall {
-      0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(800px) rotate(720deg); opacity: 0; }
-    }
+    .btn-gradient:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(251, 191, 36, 0.4); }
   </style>
- </head>
- <body class="h-full animated-bg">
-  <div class="orb" style="width: 400px; height: 400px; background: #3b82f6; top: -100px; left: -100px;"></div>
-  <div class="orb" style="width: 500px; height: 500px; background: #8b5cf6; top: 30%; right: -150px; animation-delay: 2s;"></div>
+</head>
+<body class="h-full">
+  <div class="starfield" id="starfield"></div>
+  <div class="aurora"></div>
 
-  <main class="relative w-full min-h-full flex flex-col">
-   <header class="relative z-10 w-full px-4 py-8 text-center">
-     <img src="https://smkn1ktg.sch.id/logo/logo.gif" alt="Logo" class="h-24 mx-auto mb-4">
-     <h1 class="font-display font-bold text-2xl uppercase tracking-wide">SMK Negeri 1 Kotamobagu</h1>
-     <p class="text-slate-300 font-semibold mt-2">Tahun Pelajaran 2025/2026</p>
-     <div id="logout-btn-container" class="hidden mt-4">
-        <button id="logout-btn" class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm">Keluar</button>
-     </div>
-   </header>
-
-   <div class="flex-1 flex items-center justify-center px-4 py-8 relative z-10">
-    <!-- LOADING -->
-    <div id="loading-screen" class="text-center animate-fade-in-up">
-     <div class="spinner w-12 h-12 mx-auto mb-4"></div>
-     <p class="text-slate-300">Memuat data...</p>
+  <!-- SECTION 1: COUNTDOWN -->
+  <main id="section-countdown" class="relative z-10 w-full min-h-full flex flex-col items-center px-4 py-12">
+    <div class="flex justify-center mb-8">
+        <img src="https://smkn1ktg.sch.id/logo/logo.gif" alt="Logo" class="w-24 h-24 object-contain">
     </div>
 
-    <!-- LOGIN -->
-    <div id="login-screen" class="hidden w-full max-w-md animate-fade-in-up">
-     <div class="glass-card rounded-3xl p-8">
-      <h2 class="font-display text-2xl font-bold mb-6 text-center">Cek Kelulusan</h2>
-      <form id="login-form" class="space-y-5">
-       <input type="text" id="nisn-input" placeholder="Masukkan 10 Digit NISN" class="w-full px-4 py-3.5 rounded-xl text-slate-900 bg-white" required maxlength="10">
-       <p id="login-error" class="hidden text-sm text-red-400"></p>
-       <button type="submit" id="login-submit" class="btn-gradient w-full py-3.5 rounded-xl font-bold text-white">Cek Hasil</button>
-      </form>
-     </div>
+    <header class="rounded-full px-4 py-2 mb-8 border border-amber-400/30 bg-amber-400/10">
+        <span class="text-xs sm:text-sm font-medium text-amber-100">SMK Negeri 1 Kotamobagu</span>
+    </header>
+
+    <div class="text-center max-w-3xl mb-12">
+        <h1 class="serif text-4xl sm:text-6xl font-semibold leading-tight">
+            <span class="block text-white">Sebentar lagi,</span>
+            <span class="block text-amber-400 italic mt-1">momen itu tiba</span>
+        </h1>
+        <p class="text-violet-200/70 mt-4">Pengumuman Kelulusan TP 2025/2026</p>
     </div>
 
-    <!-- RESULT -->
-    <div id="result-screen" class="hidden w-full max-w-2xl">
-     <div id="result-content" class="glass-card rounded-3xl p-8 text-center">
-       <!-- Konten diisi JS -->
-     </div>
+    <!-- Countdown Box -->
+    <div class="glass rounded-3xl p-6 sm:p-10 w-full max-w-3xl mb-12">
+        <div id="countdown" class="grid grid-cols-4 gap-4">
+            <div class="text-center">
+                <div class="mono text-3xl sm:text-5xl font-bold" id="days">00</div>
+                <p class="text-[10px] uppercase mt-2 text-violet-300/70">Hari</p>
+            </div>
+            <div class="text-center">
+                <div class="mono text-3xl sm:text-5xl font-bold" id="hours">00</div>
+                <p class="text-[10px] uppercase mt-2 text-violet-300/70">Jam</p>
+            </div>
+            <div class="text-center">
+                <div class="mono text-3xl sm:text-5xl font-bold" id="minutes">00</div>
+                <p class="text-[10px] uppercase mt-2 text-violet-300/70">Menit</p>
+            </div>
+            <div class="text-center">
+                <div class="mono text-3xl sm:text-5xl font-bold text-amber-400" id="seconds">00</div>
+                <p class="text-[10px] uppercase mt-2 text-amber-400">Detik</p>
+            </div>
+        </div>
     </div>
-   </div>
 
-   <footer class="py-5 text-center text-xs text-slate-500">
-    <p>© 2026 SMK Negeri 1 Kotamobagu</p>
-   </footer>
+    <button id="btn-to-login" disabled class="px-8 py-4 rounded-xl font-bold transition-all opacity-50 cursor-not-allowed border-2 border-amber-400/50 text-amber-400 flex items-center gap-2">
+        <i data-lucide="lock" class="w-5 h-5"></i> <span>Cek Hasil Kelulusan (Belum Tersedia)</span>
+    </button>
   </main>
 
-  <div id="confetti-container" class="fixed inset-0 pointer-events-none z-50"></div>
+  <!-- SECTION 2: LOGIN/INPUT NISN (Hidden by default) -->
+  <main id="section-login" class="hidden relative z-10 w-full min-h-full flex flex-col items-center justify-center px-4">
+    <div class="glass p-8 rounded-3xl w-full max-w-md text-center">
+        <h2 class="serif text-2xl font-bold mb-6 text-white">Masukkan NISN Anda</h2>
+        <form id="form-nisn" class="space-y-4">
+            <input type="text" id="input-nisn" maxlength="10" placeholder="10 digit NISN" class="w-full px-4 py-4 rounded-xl bg-white text-slate-900 font-bold text-center text-xl outline-none border-4 border-transparent focus:border-amber-400 transition-all">
+            <p id="error-msg" class="text-red-400 text-sm hidden">NISN tidak ditemukan</p>
+            <button type="submit" class="btn-gradient w-full py-4 rounded-xl font-bold text-lg">Verifikasi Data</button>
+        </form>
+        <button onclick="location.reload()" class="mt-6 text-violet-300/50 text-sm underline">Kembali ke Countdown</button>
+    </div>
+  </main>
+
+  <!-- SECTION 3: RESULT (Hidden by default) -->
+  <main id="section-result" class="hidden relative z-10 w-full min-h-full flex flex-col items-center justify-center px-4">
+    <div id="result-card" class="glass p-10 rounded-3xl w-full max-w-2xl text-center">
+        <!-- Content injected by JS -->
+    </div>
+  </main>
 
   <script>
-  // GANTI SHEET_ID DENGAN ID SPREADSHEET ANDA YANG SUDAH DI-PUBLISH KE WEB (CSV)
-  const SHEET_ID = '2PACX-1vQ7dKWe0slwGrGr6Q58QYTP1Plyh9_pv9jbPnh1Xo44mXmJfsHyQfQtPoKo50c1yw';
-  const CSV_URL = `https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pub?output=csv`;
+    // --- CONFIGURATION ---
+    const SHEET_ID = '2PACX-1vQ7dKWe0slwGrGr6Q58QYTP1Plyh9_pv9jbPnh1Xo44mXmJfsHyQfQtPoKo50c1yw';
+    const CSV_URL = `https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pub?output=csv`;
+    const TARGET_DATE = new Date("2026-05-04T15:00:00"); // Ganti tanggal buka di sini
 
-  let studentsData = [];
-  lucide.createIcons();
+    let studentsData = [];
 
-  async function loadData() {
-    try {
-      const response = await fetch(CSV_URL);
-      const data = await response.text();
-      const rows = data.split('\n').slice(1); // Lewati header
-      
-      studentsData = rows.map(row => {
-        const cols = row.split(',');
-        return {
-          nisn: cols[2]?.trim(),
-          nama: cols[3]?.trim(),
-          status: cols[9]?.trim(), // Kolom J (Status)
-          skl: cols[10]?.trim()   // Kolom K (Link SKL)
-        };
-      }).filter(s => s.nisn);
-
-      document.getElementById('loading-screen').classList.add('hidden');
-      document.getElementById('login-screen').classList.remove('hidden');
-    } catch (e) {
-      alert("Gagal memuat data. Pastikan Spreadsheet sudah di-publish ke web sebagai CSV.");
+    // --- STARFIELD ---
+    function initStars() {
+        const field = document.getElementById('starfield');
+        for (let i = 0; i < 50; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.width = star.style.height = (Math.random() * 2 + 1) + 'px';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            field.appendChild(star);
+        }
     }
-  }
 
-  document.getElementById('login-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const input = document.getElementById('nisn-input').value.trim();
-    const student = studentsData.find(s => s.nisn === input);
+    // --- COUNTDOWN LOGIC ---
+    function updateCountdown() {
+        const now = new Date();
+        const diff = TARGET_DATE - now;
+        const btn = document.getElementById('btn-to-login');
 
-    if (student) {
-      showResult(student);
-    } else {
-      const err = document.getElementById('login-error');
-      err.textContent = "NISN tidak ditemukan.";
-      err.classList.remove('hidden');
+        if (diff <= 0) {
+            document.getElementById('days').innerText = '00';
+            document.getElementById('hours').innerText = '00';
+            document.getElementById('minutes').innerText = '00';
+            document.getElementById('seconds').innerText = '00';
+            
+            // Activate Button
+            btn.disabled = false;
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            btn.classList.add('btn-gradient', 'text-slate-900', 'border-transparent');
+            btn.innerHTML = `<i data-lucide="unlock" class="w-5 h-5"></i> <span>Buka Pengumuman Sekarang</span>`;
+            lucide.createIcons();
+            return;
+        }
+
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const m = Math.floor((diff / (1000 * 60)) % 60);
+        const s = Math.floor((diff / 1000) % 60);
+
+        document.getElementById('days').innerText = String(d).padStart(2, '0');
+        document.getElementById('hours').innerText = String(h).padStart(2, '0');
+        document.getElementById('minutes').innerText = String(m).padStart(2, '0');
+        document.getElementById('seconds').innerText = String(s).padStart(2, '0');
     }
-  });
 
-  function showResult(s) {
-    const isPassed = s.status?.toUpperCase() === 'LULUS';
-    document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('result-screen').classList.remove('hidden');
-    document.getElementById('logout-btn-container').classList.remove('hidden');
-
-    const content = document.getElementById('result-content');
-    content.innerHTML = `
-      <h2 class="text-4xl font-bold ${isPassed ? 'text-green-400' : 'text-red-400'} mb-4">
-        ${isPassed ? 'LULUS' : 'BELUM LULUS'}
-      </h2>
-      <p class="mb-6">Nama: ${s.nama}<br>NISN: ${s.nisn}</p>
-      ${isPassed && s.skl ? `<a href="${s.skl}" target="_blank" class="btn-gradient inline-block px-6 py-3 rounded-xl text-white font-bold">Download SKL</a>` : ''}
-    `;
-
-    if (isPassed) launchConfetti();
-  }
-
-  function launchConfetti() {
-    const container = document.getElementById('confetti-container');
-    for (let i = 0; i < 50; i++) {
-      const c = document.createElement('div');
-      c.className = 'confetti';
-      c.style.left = Math.random() * 100 + '%';
-      c.style.background = ['#3b82f6', '#10b981', '#f59e0b'][Math.floor(Math.random()*3)];
-      c.style.animationDelay = Math.random() * 2 + 's';
-      container.appendChild(c);
+    // --- DATA LOGIC ---
+    async function loadData() {
+        try {
+            const res = await fetch(CSV_URL);
+            const text = await res.text();
+            const rows = text.split('\n').slice(1);
+            studentsData = rows.map(r => {
+                const c = r.split(',');
+                return { nisn: c[2]?.trim(), nama: c[3]?.trim(), status: c[9]?.trim(), skl: c[10]?.trim() };
+            });
+        } catch (e) { console.error("Data Load Error"); }
     }
-  }
 
-  document.getElementById('logout-btn').addEventListener('click', () => location.reload());
+    // --- NAVIGATION ---
+    document.getElementById('btn-to-login').onclick = () => {
+        document.getElementById('section-countdown').classList.add('hidden');
+        document.getElementById('section-login').classList.remove('hidden');
+    };
 
-  loadData();
+    document.getElementById('form-nisn').onsubmit = (e) => {
+        e.preventDefault();
+        const input = document.getElementById('input-nisn').value.trim();
+        const student = studentsData.find(s => s.nisn === input);
+
+        if (student) {
+            showResult(student);
+        } else {
+            const err = document.getElementById('error-msg');
+            err.classList.remove('hidden');
+            setTimeout(() => err.classList.add('hidden'), 3000);
+        }
+    };
+
+    function showResult(s) {
+        const isPassed = s.status?.toUpperCase() === 'LULUS';
+        document.getElementById('section-login').classList.add('hidden');
+        document.getElementById('section-result').classList.remove('hidden');
+
+        const card = document.getElementById('result-card');
+        card.innerHTML = `
+            <h3 class="text-violet-300 uppercase tracking-widest text-sm mb-2">HASIL KELULUSAN</h3>
+            <h2 class="serif text-4xl font-bold mb-6 ${isPassed ? 'text-lulus' : 'text-gagal'}">
+                ${isPassed ? 'LULUS' : 'BELUM LULUS'}
+            </h2>
+            <div class="space-y-2 mb-8 text-lg">
+                <p><span class="text-violet-300/60">Nama:</span> <span class="font-bold">${s.nama}</span></p>
+                <p><span class="text-violet-300/60">NISN:</span> <span class="mono">${s.nisn}</span></p>
+            </div>
+            ${isPassed && s.skl ? `
+                <a href="${s.skl}" target="_blank" class="btn-gradient inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold">
+                    <i data-lucide="download" class="w-5 h-5"></i> Unduh SKL (PDF)
+                </a>
+            ` : ''}
+            <button onclick="location.reload()" class="block w-full mt-8 text-violet-300/40 text-sm">Kembali ke Beranda</button>
+        `;
+        lucide.createIcons();
+    }
+
+    // --- INIT ---
+    initStars();
+    loadData();
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+    lucide.createIcons();
   </script>
- </body>
+</body>
 </html>
