@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pengumuman Kelulusan - SMKN 1 Kotamobagu</title>
+  <title>Pengumuman Kelulusan</title>
   
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
@@ -24,11 +24,14 @@
 <body class="h-full">
   <div id="starfield" class="fixed inset-0 pointer-events-none"></div>
 
-  <!-- MAIN APP -->
   <div id="app-container" class="relative z-10 min-h-full flex flex-col items-center px-4 py-12">
     <!-- Section: Countdown -->
     <section id="section-countdown" class="w-full max-w-3xl text-center">
-      <img src="https://smkn1ktg.sch.id/logo/logo.gif" class="w-24 mx-auto mb-8" alt="Logo">
+      <img id="display-logo" src="" class="w-24 mx-auto mb-8" alt="Logo">
+      <header class="inline-block rounded-full px-4 py-2 mb-8 border border-amber-400/30 bg-amber-400/10">
+        <span id="display-school-name" class="text-xs sm:text-sm font-medium text-amber-100"></span>
+      </header>
+
       <h1 class="serif text-4xl sm:text-6xl font-bold mb-4">Sebentar lagi,<br><span class="text-amber-400 italic">momen itu tiba</span></h1>
       
       <div class="glass rounded-3xl p-8 my-10">
@@ -72,38 +75,53 @@
 
   <!-- ADMIN PANEL MODAL -->
   <div id="admin-panel" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-    <div class="glass w-full max-w-md p-8 rounded-3xl relative">
+    <div class="glass w-full max-w-md p-8 rounded-3xl relative overflow-y-auto max-h-[90vh]">
       <button onclick="closeAdmin()" class="absolute top-4 right-4 opacity-50 hover:opacity-100"><i data-lucide="x" class="w-6 h-6"></i></button>
       <h2 class="serif text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="settings" class="w-5 h-5 text-amber-400"></i> Pengaturan Sistem</h2>
       
       <div class="space-y-4 text-left">
         <div>
+          <label class="text-xs text-violet-300 uppercase font-bold">Nama Sekolah</label>
+          <input type="text" id="admin-school-name" class="w-full mt-1 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm outline-none focus:border-amber-400">
+        </div>
+        <div>
+          <label class="text-xs text-violet-300 uppercase font-bold">Link Logo Sekolah (URL)</label>
+          <input type="text" id="admin-logo-url" class="w-full mt-1 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm outline-none focus:border-amber-400">
+        </div>
+        <div>
           <label class="text-xs text-violet-300 uppercase font-bold">Link CSV Google Sheets</label>
           <input type="text" id="admin-csv" class="w-full mt-1 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm outline-none focus:border-amber-400">
         </div>
         <div>
-          <label class="text-xs text-violet-300 uppercase font-bold">Tanggal & Waktu Buka (YYYY-MM-DD HH:MM)</label>
+          <label class="text-xs text-violet-300 uppercase font-bold">Tanggal & Waktu Buka</label>
           <input type="datetime-local" id="admin-date" class="w-full mt-1 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm outline-none focus:border-amber-400">
         </div>
-        <button onclick="saveAdminSettings()" class="btn-gradient w-full py-3 rounded-xl font-bold mt-4">Simpan Perubahan</button>
-        <p class="text-[10px] text-center opacity-40">Perubahan disimpan di browser ini (Local Storage)</p>
+        <button onclick="saveAdminSettings()" class="btn-gradient w-full py-3 rounded-xl font-bold mt-4">Simpan Semua Perubahan</button>
       </div>
     </div>
   </div>
 
   <script>
-    // --- LOAD SAVED SETTINGS OR DEFAULT ---
+    // --- CONFIGURATION ---
     let config = {
       csv: localStorage.getItem('cfg_csv') || 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7dKWe0slwGrGr6Q58QYTP1Plyh9_pv9jbPnh1Xo44mXmJfsHyQfQtPoKo50c1yw/pub?output=csv',
-      target: localStorage.getItem('cfg_date') || '2026-05-04T15:00:00'
+      target: localStorage.getItem('cfg_date') || '2026-05-04T15:00:00',
+      schoolName: localStorage.getItem('cfg_name') || 'SMK Negeri 1 Kotamobagu',
+      logoUrl: localStorage.getItem('cfg_logo') || 'https://smkn1ktg.sch.id/logo/logo.gif'
     };
 
     let studentsData = [];
+
+    // --- APPLY INITIAL CONFIG ---
+    document.getElementById('display-school-name').innerText = config.schoolName;
+    document.getElementById('display-logo').src = config.logoUrl;
     
     // --- ADMIN LOGIC ---
     function openAdmin() {
       const pass = prompt("Masukkan Password Admin:");
-      if (pass === "admin123") { // Password default
+      if (pass === "admin123") {
+        document.getElementById('admin-school-name').value = config.schoolName;
+        document.getElementById('admin-logo-url').value = config.logoUrl;
         document.getElementById('admin-csv').value = config.csv;
         document.getElementById('admin-date').value = config.target.substring(0, 16);
         document.getElementById('admin-panel').classList.remove('hidden');
@@ -115,16 +133,16 @@
     function closeAdmin() { document.getElementById('admin-panel').classList.add('hidden'); }
 
     function saveAdminSettings() {
-      const newCsv = document.getElementById('admin-csv').value;
-      const newDate = document.getElementById('admin-date').value;
+      localStorage.setItem('cfg_name', document.getElementById('admin-school-name').value);
+      localStorage.setItem('cfg_logo', document.getElementById('admin-logo-url').value);
+      localStorage.setItem('cfg_csv', document.getElementById('admin-csv').value);
+      localStorage.setItem('cfg_date', document.getElementById('admin-date').value);
       
-      localStorage.setItem('cfg_csv', newCsv);
-      localStorage.setItem('cfg_date', newDate);
-      alert("Pengaturan Berhasil Disimpan! Halaman akan dimuat ulang.");
+      alert("Pengaturan Berhasil Disimpan!");
       location.reload();
     }
 
-    // --- APP LOGIC ---
+    // --- DATA & COUNTDOWN LOGIC ---
     async function loadData() {
       try {
         const res = await fetch(config.csv);
@@ -156,7 +174,7 @@
       document.getElementById('seconds').innerText = String(s).padStart(2, '0');
     }
 
-    // --- NAVIGATION & UI ---
+    // --- NAVIGATION ---
     document.getElementById('btn-to-login').onclick = () => {
       document.getElementById('section-countdown').classList.add('hidden');
       document.getElementById('section-login').classList.remove('hidden');
@@ -187,7 +205,8 @@
     for (let i = 0; i < 60; i++) {
       const star = document.createElement('div');
       star.className = 'star';
-      star.style.width = star.style.height = (Math.random() * 2 + 1) + 'px';
+      star.style.width = (Math.random() * 2 + 1) + 'px';
+      star.style.height = star.style.width;
       star.style.left = Math.random() * 100 + '%'; star.style.top = Math.random() * 100 + '%';
       star.style.animationDelay = Math.random() * 3 + 's';
       field.appendChild(star);
