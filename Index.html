@@ -1,201 +1,299 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pengumuman Kelulusan</title>
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pengumuman Kelulusan - SMK Negeri 1 Kotamobagu</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+  :root {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --accent-blue: #0066ff;
+    --accent-cyan: #0ea5e9;
+    --accent-purple: #6366f1;
+    --accent-green: #10b981;
+    --accent-red: #ef4444;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+  }
 
-<script src="https://cdn.tailwindcss.com"></script>
+  * { font-family: 'Plus Jakarta Sans', sans-serif; }
+  .font-display { font-family: 'Space Grotesk', sans-serif; }
 
-<style>
-body {
-  background: #0f172a;
-  color: white;
-  font-family: sans-serif;
-}
-.card {
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(10px);
-}
-.btn {
-  background: linear-gradient(135deg,#3b82f6,#06b6d4);
-}
-</style>
-</head>
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
 
-<body class="flex items-center justify-center min-h-screen">
+  body {
+    background: linear-gradient(180deg, #0f172a 0%, #1a1f35 100%);
+    color: var(--text-primary);
+    overflow-x: hidden;
+  }
 
-<div class="w-full max-w-md p-6 card rounded-xl text-center">
+  /* Animated gradient background */
+  .animated-bg {
+    background:
+      radial-gradient(ellipse at top left, rgba(14, 165, 233, 0.12), transparent 50%),
+      radial-gradient(ellipse at top right, rgba(168, 85, 247, 0.12), transparent 50%),
+      radial-gradient(ellipse at bottom, rgba(34, 197, 94, 0.08), transparent 60%),
+      linear-gradient(180deg, #0f172a 0%, #1a1f35 100%);
+    position: relative;
+  }
 
-<h1 class="text-xl font-bold mb-4">Pengumuman Kelulusan</h1>
+  .animated-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+  }
 
-<input id="nisn" type="text" placeholder="Masukkan NISN"
-class="w-full p-3 rounded text-black mb-3">
+  /* Floating orbs */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.25;
+    pointer-events: none;
+    animation: float 8s ease-in-out infinite;
+  }
 
-<button id="btn" onclick="cek()" class="btn w-full py-3 rounded font-bold">
-Cek Kelulusan
-</button>
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(30px, -30px) scale(1.1); }
+  }
 
-<p id="msg" class="mt-3 text-red-400"></p>
+  /* Glass card */
+  .glass-card {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 102, 255, 0.25);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
 
-<div id="result" class="mt-5"></div>
+  /* Button gradient */
+  .btn-gradient {
+    background: linear-gradient(135deg, #0066ff 0%, #0099ff 100%);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 102, 255, 0.4);
+  }
+  .btn-gradient:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 102, 255, 0.5);
+  }
+  .btn-gradient:disabled { opacity: 0.6; cursor: not-allowed; }
 
-</div>
+  .btn-success {
+    background: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
+  }
+  .btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(34, 197, 94, 0.5);
+  }
 
-<script>
-// ================= CONFIG =================
-const SHEET_ID = 'ISI_ID_SPREADSHEET';
-const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
+  /* Input */
+  .input-modern {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1.5px solid rgba(0, 102, 255, 0.25);
+    color: #0f172a;
+    transition: all 0.3s ease;
+  }
+  .input-modern:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.2);
+  }
+  .input-modern::placeholder {
+    color: #94a3b8;
+  }
 
-let data = [];
-let attempts = 0;
-let loaded = false;
+  /* Animations */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
 
-// ================= CSV PARSER AMAN =================
-function parseCSV(text) {
-  const rows = [];
-  let row = [], field = "", inQuotes = false;
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .animate-scale-in { animation: scaleIn 0.5s ease-out forwards; }
 
-  for (let i = 0; i < text.length; i++) {
-    const char = text[i];
-    const next = text[i + 1];
+  @keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+  }
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+    background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.1) 100%);
+    background-size: 1000px 100%;
+  }
 
-    if (inQuotes) {
-      if (char === '"' && next === '"') {
-        field += '"';
-        i++;
-      } else if (char === '"') {
-        inQuotes = false;
-      } else {
-        field += char;
-      }
-    } else {
-      if (char === '"') {
-        inQuotes = true;
-      } else if (char === ',') {
-        row.push(field);
-        field = "";
-      } else if (char === '\n') {
-        row.push(field);
-        rows.push(row);
-        row = [];
-        field = "";
-      } else {
-        field += char;
-      }
+  .confetti {
+    position: fixed;
+    pointer-events: none;
+  }
+
+  @keyframes confetti-fall {
+    to {
+      transform: translateY(100vh) rotate(360deg);
+      opacity: 0;
     }
   }
 
-  if (field) {
-    row.push(field);
-    rows.push(row);
+  .confetti-item {
+    animation: confetti-fall 3s ease-in forwards;
   }
 
-  return rows;
-}
+  .hidden { display: none; }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div class="animated-bg h-full overflow-auto"><!-- Floating orbs -->
+   <div class="orb" style="width: 400px; height: 400px; background: #0ea5e9; top: -100px; left: -100px; animation-delay: 0s;"></div>
+   <div class="orb" style="width: 300px; height: 300px; background: #a855f7; top: 50%; right: -50px; animation-delay: 2s;"></div>
+   <div class="orb" style="width: 250px; height: 250px; background: #10b981; bottom: 100px; left: 10%; animation-delay: 4s;"></div><!-- Main content -->
+   <div class="relative z-10 flex items-center justify-center min-h-full py-8 px-4">
+    <div class="w-full max-w-md"><!-- Logo/Header -->
+     <div class="text-center mb-8 animate-fade-in-up">
+      <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-2xl mb-4"><i data-lucide="graduation-cap" style="width: 32px; height: 32px; color: white;"></i>
+      </div>
+      <h1 class="font-display text-4xl font-bold mb-2">SMK Negeri 1<br>
+       Kotamobagu</h1>
+      <p class="text-cyan-400 text-sm">Pengumuman Kelulusan Tahun Ajaran 2024/2025</p>
+     </div><!-- Form Card -->
+     <div class="glass-card rounded-2xl p-8 mb-6 animate-fade-in-up" style="animation-delay: 0.1s;">
+      <h2 class="font-display text-2xl font-bold mb-2">Cek Status Kelulusan</h2>
+      <p class="text-sm text-gray-400 mb-6">Masukkan nomor NISN Anda untuk melihat hasil</p>
+      <form id="graduationForm" onsubmit="handleSubmit(event)">
+       <div class="mb-6"><label for="nisn" class="block text-sm font-medium mb-2">Nomor NISN</label> <input type="text" id="nisn" placeholder="Contoh: 0012345678" class="input-modern w-full px-4 py-3 rounded-lg" maxlength="10" required>
+        <p class="text-xs text-gray-500 mt-1">Masukkan 10 digit NISN Anda</p>
+       </div><button type="submit" class="btn-gradient w-full py-3 rounded-lg font-semibold flex items-center justify-center gap-2 text-white"> <i data-lucide="search" style="width: 18px; height: 18px;"></i> Cek Hasil </button>
+      </form>
+     </div><!-- Result Card (Hidden by default) -->
+     <div id="resultCard" class="glass-card rounded-2xl p-8 hidden animate-scale-in">
+      <div class="text-center mb-6">
+       <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-600 rounded-full mb-4"><i data-lucide="check-circle-2" style="width: 40px; height: 40px; color: white;"></i>
+       </div>
+       <h2 class="font-display text-3xl font-bold text-green-400 mb-2">LULUS</h2>
+       <p class="text-gray-300">Selamat Anda telah dinyatakan lulus</p>
+      </div>
+      <div class="bg-slate-700 bg-opacity-50 rounded-lg p-4 mb-6 space-y-3">
+       <div class="flex justify-between text-sm"><span class="text-gray-400">Nomor NISN:</span> <span id="resultNisn" class="font-semibold"></span>
+       </div>
+       <div class="flex justify-between text-sm"><span class="text-gray-400">Nama Siswa:</span> <span id="resultName" class="font-semibold"></span>
+       </div>
+       <div class="flex justify-between text-sm"><span class="text-gray-400">Tanggal Pengumuman:</span> <span id="resultDate" class="font-semibold"></span>
+       </div>
+      </div>
+      <div class="flex gap-3"><button onclick="printResult()" class="btn-success flex-1 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 text-white"> <i data-lucide="printer" style="width: 18px; height: 18px;"></i> Cetak </button> <button onclick="resetForm()" class="flex-1 py-2 rounded-lg font-semibold border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:bg-opacity-10 transition"> <i data-lucide="arrow-left" style="width: 18px; height: 18px; display: inline; margin-right: 6px;"></i> Kembali </button>
+      </div>
+     </div><!-- Footer -->
+     <div class="text-center text-xs text-gray-500 mt-8">
+      <p>© 2024 SMK Negeri 1 Kotamobagu | Pengumuman Resmi Kelulusan</p>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
 
-// ================= LOAD DATA =================
-document.getElementById("msg").innerText = "Memuat data...";
+    function handleSubmit(event) {
+      event.preventDefault();
+      
+      const nisn = document.getElementById('nisn').value;
+      
+      if (nisn.length !== 10) {
+        alert('NISN harus 10 digit');
+        return;
+      }
 
-fetch(URL)
-.then(res => res.text())
-.then(text => {
-  const rows = parseCSV(text);
+      // Hide form and show result
+      document.getElementById('graduationForm').style.display = 'none';
+      
+      // Populate result
+      document.getElementById('resultNisn').textContent = nisn;
+      document.getElementById('resultName').textContent = 'Siswa NISN ' + nisn;
+      document.getElementById('resultDate').textContent = new Date().toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
 
-  data = rows.slice(1).map(r => ({
-    nisn: (r[2] || "").trim(),
-    nama: (r[3] || "").trim(),
-    jurusan: (r[8] || "").trim(),
-    status: (r[9] || "").trim(),
-    skl: (r[10] || "").trim()
-  }));
+      // Show result card
+      document.getElementById('resultCard').classList.remove('hidden');
 
-  loaded = true;
-  document.getElementById("msg").innerText = "";
-})
-.catch(() => {
-  document.getElementById("msg").innerText = "Gagal ambil data!";
-});
-
-// ================= SANITIZE =================
-function safe(text){
-  return text.replace(/[<>&"']/g, '');
-}
-
-// ================= CEK =================
-function cek(){
-  const nisn = document.getElementById("nisn").value.trim();
-  const msg = document.getElementById("msg");
-  const result = document.getElementById("result");
-
-  msg.innerText = "";
-  result.innerHTML = "";
-
-  if(!loaded){
-    msg.innerText = "Data belum siap...";
-    return;
-  }
-
-  if(!nisn){
-    msg.innerText = "NISN wajib diisi!";
-    return;
-  }
-
-  attempts++;
-  if(attempts > 5){
-    msg.innerText = "Terlalu banyak percobaan!";
-    return;
-  }
-
-  const siswa = data.find(s => s.nisn === nisn);
-
-  if(!siswa){
-    msg.innerText = "NISN tidak ditemukan!";
-    return;
-  }
-
-  countdown(siswa);
-}
-
-// ================= COUNTDOWN =================
-function countdown(siswa){
-  let count = 3;
-  const result = document.getElementById("result");
-
-  result.innerHTML = `<div class="text-6xl font-bold">${count}</div>`;
-
-  const interval = setInterval(()=>{
-    count--;
-
-    if(count > 0){
-      result.innerHTML = `<div class="text-6xl font-bold">${count}</div>`;
-    } else {
-      clearInterval(interval);
-      tampilkan(siswa);
+      // Create confetti
+      createConfetti();
     }
 
-  },1000);
-}
+    function resetForm() {
+      document.getElementById('nisn').value = '';
+      document.getElementById('graduationForm').style.display = 'block';
+      document.getElementById('resultCard').classList.add('hidden');
+    }
 
-// ================= HASIL =================
-function tampilkan(s){
-  const lulus = /lulus/i.test(s.status) && !/tidak/i.test(s.status);
-
-  if(lulus){
-    document.getElementById("result").innerHTML = `
-      <h2 class="text-3xl font-bold text-green-400">LULUS</h2>
-      <p class="mt-2">${safe(s.nama)}</p>
-      <p>${safe(s.jurusan)}</p>
-      ${s.skl ? `<a href="${s.skl}" target="_blank" class="block mt-3 underline">Download SKL</a>` : ""}
-    `;
-  } else {
-    document.getElementById("result").innerHTML = `
-      <h2 class="text-3xl font-bold text-red-400">TIDAK LULUS</h2>
-      <p class="mt-2">${safe(s.nama)}</p>
-    `;
-  }
-}
-</script>
-
-</body>
+    function printResult() {
+      const nisn = document.getElementById('resultNisn').textContent;
+      const name = document.getElementById('resultName').textContent;
+      const date = document.getElementById('resultDate').textContent;
+      
+      const printWindow = window.open('', '', 'height=600,width=800');
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Pengumuman Kelulusan</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 40px; }
+            .container { max-width: 600px; margin: 0 auto; border: 2px solid #333; padding: 30px; }
+            .header { text-align: center; margin-bottom: 30px; }
+            .school-name { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+            .title { font-size: 20px; font-weight: bold; color: #10b981; margin: 20px 0; }
+            .content { font-size: 16px; line-height: 1.8; }
+            .data { margin: 20px 0; }
+            .data-row { margin: 10px 0; }
+            .label { display: inline-block; width: 150px; font-weight: bold; }
+            .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <div class="school-name">SMK Negeri 1 Kotamobagu</div>
+              <div style="color: #666;">Pengumuman Resmi Kelulusan</div>
+            </div>
+            <div class="title">LULUS</div>
+            <div class="content">
+              <p>Dengan ini kami sampaikan bahwa Anda telah dinyatakan <strong>LULUS</strong> dari SMK Negeri 1 Kotamobagu.</p>
+              <div class="data">
+                <div class="data-row"><span class="label">Nomor NISN:</span> ${nisn}</div>
+                <div class="data-row"><span class="label">Nama Siswa:</span> ${name}</div>
+                <div class="data-row"><span class="label">Tanggal Pengumuman:</span> ${date}</div>
+              </div>
+              <p>Selamat atas prestasi Anda dan semoga sukses melangkah ke masa depan yang lebih cerah.</p>
+            </div>
+            <div class="footer">
+              <p>© 2024 SMK Negeri 1 Kotamobagu</p>
+              <p>Dokumen ini telah diverifikasi secara resmi</p>
+            </div>
+          </div>
+          <script>window.print();</script> `); printWindow.document.close(); } function createConfetti() { const confettiCount = 50; const colors = ['#0066ff', '#0ea5e9', '#6366f1', '#10b981', '#f59e0b']; for (let i = 0; i &lt; confettiCount; i++) { const confetti = document.createElement('div'); confetti.className = 'confetti-item'; confetti.style.left = Math.random() * 100 + 'vw'; confetti.style.top = '-10px'; confetti.style.width = Math.random() * 8 + 4 + 'px'; confetti.style.height = confetti.style.width; confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; confetti.style.borderRadius = '50%'; confetti.style.opacity = Math.random() * 0.7 + 0.3; confetti.style.animationDelay = Math.random() * 0.5 + 's'; document.body.appendChild(confetti); setTimeout(() =&gt; confetti.remove(), 3500); } } 
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f67358ef2a8ea76',t:'MTc3Nzg5NDYwMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
