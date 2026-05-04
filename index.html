@@ -1,24 +1,19 @@
 <!doctype html>
 <html lang="id" class="h-full">
-<head>
+ <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pengumuman Kelulusan - SMK Negeri 1 Kotamobagu</title>
   
-  <!-- Scripts & Fonts -->
+  <!-- Frameworks & Fonts -->
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-
+  
   <style>
     :root {
       --bg-primary: #0f172a;
-      --bg-secondary: #1e293b;
       --accent-blue: #0066ff;
-      --accent-cyan: #0ea5e9;
-      --accent-purple: #6366f1;
-      --accent-green: #10b981;
-      --accent-red: #ef4444;
       --text-primary: #f1f5f9;
       --text-secondary: #cbd5e1;
     }
@@ -26,40 +21,21 @@
     * { font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; }
     .font-display { font-family: 'Space Grotesk', sans-serif; }
 
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
-
     body {
       background: linear-gradient(180deg, #0f172a 0%, #1a1f35 100%);
       color: var(--text-primary);
       overflow-x: hidden;
+      min-height: 100%;
     }
 
-    /* Animated gradient background */
     .animated-bg {
       background:
         radial-gradient(ellipse at top left, rgba(14, 165, 233, 0.12), transparent 50%),
         radial-gradient(ellipse at top right, rgba(168, 85, 247, 0.12), transparent 50%),
-        radial-gradient(ellipse at bottom, rgba(34, 197, 94, 0.08), transparent 60%),
         linear-gradient(180deg, #0f172a 0%, #1a1f35 100%);
       position: relative;
     }
 
-    .animated-bg::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px);
-      background-size: 50px 50px;
-      pointer-events: none;
-    }
-
-    /* Floating orbs */
     .orb {
       position: absolute;
       border-radius: 50%;
@@ -74,11 +50,9 @@
       50% { transform: translate(30px, -30px) scale(1.1); }
     }
 
-    /* Glass card */
     .glass-card {
       background: rgba(30, 41, 59, 0.8);
       backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(0, 102, 255, 0.25);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
@@ -86,171 +60,166 @@
     .btn-gradient {
       background: linear-gradient(135deg, #0066ff 0%, #0099ff 100%);
       transition: all 0.3s ease;
-      box-shadow: 0 4px 20px rgba(0, 102, 255, 0.4);
     }
+
     .btn-gradient:hover:not(:disabled) {
       transform: translateY(-2px);
       box-shadow: 0 8px 30px rgba(0, 102, 255, 0.5);
     }
 
-    .btn-success {
-      background: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
-    }
-    .btn-success:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(34, 197, 94, 0.5);
+    .spinner {
+      border: 3px solid rgba(255,255,255,0.2);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
     }
 
-    .input-modern {
-      background: rgba(255, 255, 255, 0.9);
-      border: 1.5px solid rgba(0, 102, 255, 0.25);
-      color: #0f172a;
-      transition: all 0.3s ease;
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    .input-modern:focus {
-      outline: none;
-      border-color: var(--accent-blue);
-      box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.2);
-    }
-
-    @keyframes scaleIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
-    .animate-scale-in { animation: scaleIn 0.5s ease-out forwards; }
-
-    .confetti-item {
-      position: fixed;
-      pointer-events: none;
-      animation: confetti-fall 3s ease-in forwards;
-    }
-
-    @keyframes confetti-fall {
-      to { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-    }
-
+    .animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
     .hidden { display: none; }
+    
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      animation: confetti-fall 3s linear forwards;
+    }
+    @keyframes confetti-fall {
+      0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(800px) rotate(720deg); opacity: 0; }
+    }
   </style>
-</head>
-<body class="h-full">
-  <div class="animated-bg h-full overflow-auto">
-    <!-- Orbs -->
-    <div class="orb" style="width: 400px; height: 400px; background: #0ea5e9; top: -100px; left: -100px;"></div>
-    <div class="orb" style="width: 300px; height: 300px; background: #a855f7; top: 50%; right: -50px; animation-delay: 2s;"></div>
+ </head>
+ <body class="h-full animated-bg">
+  <div class="orb" style="width: 400px; height: 400px; background: #3b82f6; top: -100px; left: -100px;"></div>
+  <div class="orb" style="width: 500px; height: 500px; background: #8b5cf6; top: 30%; right: -150px; animation-delay: 2s;"></div>
 
-    <div class="relative z-10 flex items-center justify-center min-h-full py-8 px-4">
-      <div class="w-full max-w-md">
-        
-        <!-- Header -->
-        <div class="text-center mb-8">
-          <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-2xl mb-4">
-            <i data-lucide="graduation-cap" class="text-white" style="width: 32px; height: 32px;"></i>
-          </div>
-          <h1 class="font-display text-4xl font-bold mb-2">SMK Negeri 1 Kotamobagu</h1>
-          <p class="text-cyan-400 text-sm">Pengumuman Kelulusan Tahun Ajaran 2024/2025</p>
-        </div>
+  <main class="relative w-full min-h-full flex flex-col">
+   <header class="relative z-10 w-full px-4 py-8 text-center">
+     <img src="https://smkn1ktg.sch.id/logo/logo.gif" alt="Logo" class="h-24 mx-auto mb-4">
+     <h1 class="font-display font-bold text-2xl uppercase tracking-wide">SMK Negeri 1 Kotamobagu</h1>
+     <p class="text-slate-300 font-semibold mt-2">Tahun Pelajaran 2025/2026</p>
+     <div id="logout-btn-container" class="hidden mt-4">
+        <button id="logout-btn" class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm">Keluar</button>
+     </div>
+   </header>
 
-        <!-- Form Card -->
-        <div id="formContainer" class="glass-card rounded-2xl p-8 mb-6">
-          <h2 class="font-display text-2xl font-bold mb-2">Cek Status Kelulusan</h2>
-          <p class="text-sm text-gray-400 mb-6">Masukkan nomor NISN Anda untuk melihat hasil</p>
-          <form id="graduationForm" onsubmit="handleSubmit(event)">
-            <div class="mb-6">
-              <label for="nisn" class="block text-sm font-medium mb-2">Nomor NISN</label>
-              <input type="text" id="nisn" placeholder="Contoh: 0012345678" class="input-modern w-full px-4 py-3 rounded-lg" maxlength="10" required>
-              <p class="text-xs text-gray-500 mt-1">Masukkan 10 digit NISN Anda</p>
-            </div>
-            <button type="submit" class="btn-gradient w-full py-3 rounded-lg font-semibold flex items-center justify-center gap-2 text-white">
-              <i data-lucide="search" style="width: 18px; height: 18px;"></i> Cek Hasil
-            </button>
-          </form>
-        </div>
-
-        <!-- Result Card -->
-        <div id="resultCard" class="glass-card rounded-2xl p-8 hidden animate-scale-in">
-          <div class="text-center mb-6">
-            <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-600 rounded-full mb-4">
-              <i data-lucide="check-circle-2" class="text-white" style="width: 40px; height: 40px;"></i>
-            </div>
-            <h2 class="font-display text-3xl font-bold text-green-400 mb-2">LULUS</h2>
-            <p class="text-gray-300">Selamat Anda telah dinyatakan lulus</p>
-          </div>
-          
-          <div class="bg-slate-700 bg-opacity-50 rounded-lg p-4 mb-6 space-y-3">
-            <div class="flex justify-between text-sm"><span class="text-gray-400">Nomor NISN:</span> <span id="resultNisn" class="font-semibold"></span></div>
-            <div class="flex justify-between text-sm"><span class="text-gray-400">Nama Siswa:</span> <span id="resultName" class="font-semibold"></span></div>
-            <div class="flex justify-between text-sm"><span class="text-gray-400">Tanggal:</span> <span id="resultDate" class="font-semibold"></span></div>
-          </div>
-
-          <div class="flex gap-3">
-            <button onclick="printResult()" class="btn-success flex-1 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 text-white">
-              <i data-lucide="printer" style="width: 18px; height: 18px;"></i> Cetak
-            </button>
-            <button onclick="resetForm()" class="flex-1 py-2 rounded-lg font-semibold border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:bg-opacity-10 transition">
-              Kembali
-            </button>
-          </div>
-        </div>
-
-        <div class="text-center text-xs text-gray-500 mt-8">
-          <p>© 2024 SMK Negeri 1 Kotamobagu</p>
-        </div>
-      </div>
+   <div class="flex-1 flex items-center justify-center px-4 py-8 relative z-10">
+    <!-- LOADING -->
+    <div id="loading-screen" class="text-center animate-fade-in-up">
+     <div class="spinner w-12 h-12 mx-auto mb-4"></div>
+     <p class="text-slate-300">Memuat data...</p>
     </div>
-  </div>
+
+    <!-- LOGIN -->
+    <div id="login-screen" class="hidden w-full max-w-md animate-fade-in-up">
+     <div class="glass-card rounded-3xl p-8">
+      <h2 class="font-display text-2xl font-bold mb-6 text-center">Cek Kelulusan</h2>
+      <form id="login-form" class="space-y-5">
+       <input type="text" id="nisn-input" placeholder="Masukkan 10 Digit NISN" class="w-full px-4 py-3.5 rounded-xl text-slate-900 bg-white" required maxlength="10">
+       <p id="login-error" class="hidden text-sm text-red-400"></p>
+       <button type="submit" id="login-submit" class="btn-gradient w-full py-3.5 rounded-xl font-bold text-white">Cek Hasil</button>
+      </form>
+     </div>
+    </div>
+
+    <!-- RESULT -->
+    <div id="result-screen" class="hidden w-full max-w-2xl">
+     <div id="result-content" class="glass-card rounded-3xl p-8 text-center">
+       <!-- Konten diisi JS -->
+     </div>
+    </div>
+   </div>
+
+   <footer class="py-5 text-center text-xs text-slate-500">
+    <p>© 2026 SMK Negeri 1 Kotamobagu</p>
+   </footer>
+  </main>
+
+  <div id="confetti-container" class="fixed inset-0 pointer-events-none z-50"></div>
 
   <script>
-    // Inisialisasi ikon
-    lucide.createIcons();
+  // GANTI SHEET_ID DENGAN ID SPREADSHEET ANDA YANG SUDAH DI-PUBLISH KE WEB (CSV)
+  const SHEET_ID = '2PACX-1vQ7dKWe0slwGrGr6Q58QYTP1Plyh9_pv9jbPnh1Xo44mXmJfsHyQfQtPoKo50c1yw';
+  const CSV_URL = `https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pub?output=csv`;
 
-    function handleSubmit(event) {
-      event.preventDefault();
-      const nisnValue = document.getElementById('nisn').value;
+  let studentsData = [];
+  lucide.createIcons();
+
+  async function loadData() {
+    try {
+      const response = await fetch(CSV_URL);
+      const data = await response.text();
+      const rows = data.split('\n').slice(1); // Lewati header
       
-      if (nisnValue.length < 10) {
-        alert('NISN harus 10 digit');
-        return;
-      }
+      studentsData = rows.map(row => {
+        const cols = row.split(',');
+        return {
+          nisn: cols[2]?.trim(),
+          nama: cols[3]?.trim(),
+          status: cols[9]?.trim(), // Kolom J (Status)
+          skl: cols[10]?.trim()   // Kolom K (Link SKL)
+        };
+      }).filter(s => s.nisn);
 
-      document.getElementById('formContainer').classList.add('hidden');
-      document.getElementById('resultNisn').textContent = nisnValue;
-      document.getElementById('resultName').textContent = "SISWA - " + nisnValue; // Placeholder
-      document.getElementById('resultDate').textContent = new Date().toLocaleDateString('id-ID', {
-        day: 'numeric', month: 'long', year: 'numeric'
-      });
-
-      document.getElementById('resultCard').classList.remove('hidden');
-      createConfetti();
+      document.getElementById('loading-screen').classList.add('hidden');
+      document.getElementById('login-screen').classList.remove('hidden');
+    } catch (e) {
+      alert("Gagal memuat data. Pastikan Spreadsheet sudah di-publish ke web sebagai CSV.");
     }
+  }
 
-    function resetForm() {
-      document.getElementById('graduationForm').reset();
-      document.getElementById('formContainer').classList.remove('hidden');
-      document.getElementById('resultCard').classList.add('hidden');
-    }
+  document.getElementById('login-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = document.getElementById('nisn-input').value.trim();
+    const student = studentsData.find(s => s.nisn === input);
 
-    function createConfetti() {
-      const colors = ['#0066ff', '#0ea5e9', '#6366f1', '#10b981', '#f59e0b'];
-      for (let i = 0; i < 50; i++) {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti-item';
-        confetti.style.left = Math.random() * 100 + 'vw';
-        confetti.style.top = '-10px';
-        confetti.style.width = Math.random() * 8 + 4 + 'px';
-        confetti.style.height = confetti.style.width;
-        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        confetti.style.borderRadius = '50%';
-        confetti.style.animationDelay = Math.random() * 0.5 + 's';
-        document.body.appendChild(confetti);
-        setTimeout(() => confetti.remove(), 3000);
-      }
+    if (student) {
+      showResult(student);
+    } else {
+      const err = document.getElementById('login-error');
+      err.textContent = "NISN tidak ditemukan.";
+      err.classList.remove('hidden');
     }
+  });
 
-    function printResult() {
-      window.print();
+  function showResult(s) {
+    const isPassed = s.status?.toUpperCase() === 'LULUS';
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('result-screen').classList.remove('hidden');
+    document.getElementById('logout-btn-container').classList.remove('hidden');
+
+    const content = document.getElementById('result-content');
+    content.innerHTML = `
+      <h2 class="text-4xl font-bold ${isPassed ? 'text-green-400' : 'text-red-400'} mb-4">
+        ${isPassed ? 'LULUS' : 'BELUM LULUS'}
+      </h2>
+      <p class="mb-6">Nama: ${s.nama}<br>NISN: ${s.nisn}</p>
+      ${isPassed && s.skl ? `<a href="${s.skl}" target="_blank" class="btn-gradient inline-block px-6 py-3 rounded-xl text-white font-bold">Download SKL</a>` : ''}
+    `;
+
+    if (isPassed) launchConfetti();
+  }
+
+  function launchConfetti() {
+    const container = document.getElementById('confetti-container');
+    for (let i = 0; i < 50; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = Math.random() * 100 + '%';
+      c.style.background = ['#3b82f6', '#10b981', '#f59e0b'][Math.floor(Math.random()*3)];
+      c.style.animationDelay = Math.random() * 2 + 's';
+      container.appendChild(c);
     }
+  }
+
+  document.getElementById('logout-btn').addEventListener('click', () => location.reload());
+
+  loadData();
   </script>
-</body>
+ </body>
 </html>
