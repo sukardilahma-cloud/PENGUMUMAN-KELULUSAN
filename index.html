@@ -5,245 +5,195 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pengumuman Kelulusan - SMKN 1 Kotamobagu</title>
   
-  <!-- SDK & Frameworks -->
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   
   <style>
-    :root {
-      --bg-primary: #0a0e27;
-      --surface: #151a3a;
-      --text: #f5f3ff;
-      --primary-action: #fbbf24;
-    }
-
-    body {
-      font-family: 'Outfit', sans-serif;
-      background: var(--bg-primary);
-      color: var(--text);
-      overflow-x: hidden;
-      margin: 0;
-    }
-
+    :root { --bg: #0a0e27; --amber: #fbbf24; }
+    body { font-family: 'Outfit', sans-serif; background: var(--bg); color: #f5f3ff; margin: 0; overflow-x: hidden; }
     .serif { font-family: 'Fraunces', serif; }
     .mono { font-family: 'JetBrains Mono', monospace; }
-
-    /* Starfield & Aurora Effects */
-    .starfield { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+    .glass { background: rgba(21, 26, 58, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
     .star { position: absolute; background: white; border-radius: 50%; animation: twinkle 3s infinite; }
     @keyframes twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
-
-    .aurora {
-      position: absolute; inset: 0; pointer-events: none;
-      background: radial-gradient(ellipse at 20% 30%, rgba(167, 139, 250, 0.2), transparent 60%);
-    }
-
-    .glass {
-      background: rgba(21, 26, 58, 0.5);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
     .hidden { display: none !important; }
-
-    /* Result Colors */
-    .text-lulus { color: #4ade80; text-shadow: 0 0 20px rgba(74, 222, 128, 0.5); }
-    .text-gagal { color: #f87171; }
-
-    .btn-gradient {
-      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-      color: #0a0e27;
-      transition: all 0.3s ease;
-    }
-    .btn-gradient:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(251, 191, 36, 0.4); }
+    .btn-gradient { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: #0a0e27; }
   </style>
 </head>
 <body class="h-full">
-  <div class="starfield" id="starfield"></div>
-  <div class="aurora"></div>
+  <div id="starfield" class="fixed inset-0 pointer-events-none"></div>
 
-  <!-- SECTION 1: COUNTDOWN -->
-  <main id="section-countdown" class="relative z-10 w-full min-h-full flex flex-col items-center px-4 py-12">
-    <div class="flex justify-center mb-8">
-        <img src="https://smkn1ktg.sch.id/logo/logo.gif" alt="Logo" class="w-24 h-24 object-contain">
-    </div>
-
-    <header class="rounded-full px-4 py-2 mb-8 border border-amber-400/30 bg-amber-400/10">
-        <span class="text-xs sm:text-sm font-medium text-amber-100">SMK Negeri 1 Kotamobagu</span>
-    </header>
-
-    <div class="text-center max-w-3xl mb-12">
-        <h1 class="serif text-4xl sm:text-6xl font-semibold leading-tight">
-            <span class="block text-white">Sebentar lagi,</span>
-            <span class="block text-amber-400 italic mt-1">momen itu tiba</span>
-        </h1>
-        <p class="text-violet-200/70 mt-4">Pengumuman Kelulusan TP 2025/2026</p>
-    </div>
-
-    <!-- Countdown Box -->
-    <div class="glass rounded-3xl p-6 sm:p-10 w-full max-w-3xl mb-12">
-        <div id="countdown" class="grid grid-cols-4 gap-4">
-            <div class="text-center">
-                <div class="mono text-3xl sm:text-5xl font-bold" id="days">00</div>
-                <p class="text-[10px] uppercase mt-2 text-violet-300/70">Hari</p>
-            </div>
-            <div class="text-center">
-                <div class="mono text-3xl sm:text-5xl font-bold" id="hours">00</div>
-                <p class="text-[10px] uppercase mt-2 text-violet-300/70">Jam</p>
-            </div>
-            <div class="text-center">
-                <div class="mono text-3xl sm:text-5xl font-bold" id="minutes">00</div>
-                <p class="text-[10px] uppercase mt-2 text-violet-300/70">Menit</p>
-            </div>
-            <div class="text-center">
-                <div class="mono text-3xl sm:text-5xl font-bold text-amber-400" id="seconds">00</div>
-                <p class="text-[10px] uppercase mt-2 text-amber-400">Detik</p>
-            </div>
+  <!-- MAIN APP -->
+  <div id="app-container" class="relative z-10 min-h-full flex flex-col items-center px-4 py-12">
+    <!-- Section: Countdown -->
+    <section id="section-countdown" class="w-full max-w-3xl text-center">
+      <img src="https://smkn1ktg.sch.id/logo/logo.gif" class="w-24 mx-auto mb-8" alt="Logo">
+      <h1 class="serif text-4xl sm:text-6xl font-bold mb-4">Sebentar lagi,<br><span class="text-amber-400 italic">momen itu tiba</span></h1>
+      
+      <div class="glass rounded-3xl p-8 my-10">
+        <div class="grid grid-cols-4 gap-4">
+          <div class="text-center"><div class="mono text-3xl sm:text-5xl font-bold" id="days">00</div><p class="text-xs opacity-50 uppercase mt-2">Hari</p></div>
+          <div class="text-center"><div class="mono text-3xl sm:text-5xl font-bold" id="hours">00</div><p class="text-xs opacity-50 uppercase mt-2">Jam</p></div>
+          <div class="text-center"><div class="mono text-3xl sm:text-5xl font-bold" id="minutes">00</div><p class="text-xs opacity-50 uppercase mt-2">Menit</p></div>
+          <div class="text-center"><div class="mono text-3xl sm:text-5xl font-bold text-amber-400" id="seconds">00</div><p class="text-xs text-amber-400 uppercase mt-2">Detik</p></div>
         </div>
-    </div>
+      </div>
 
-    <button id="btn-to-login" disabled class="px-8 py-4 rounded-xl font-bold transition-all opacity-50 cursor-not-allowed border-2 border-amber-400/50 text-amber-400 flex items-center gap-2">
-        <i data-lucide="lock" class="w-5 h-5"></i> <span>Cek Hasil Kelulusan (Belum Tersedia)</span>
-    </button>
-  </main>
+      <button id="btn-to-login" disabled class="px-8 py-4 rounded-xl font-bold opacity-50 cursor-not-allowed border-2 border-amber-400/50 text-amber-400 flex items-center gap-2 mx-auto transition-all">
+        <i data-lucide="lock" class="w-5 h-5"></i> <span id="btn-text">Tunggu Waktu Pengumuman</span>
+      </button>
+    </section>
 
-  <!-- SECTION 2: LOGIN/INPUT NISN (Hidden by default) -->
-  <main id="section-login" class="hidden relative z-10 w-full min-h-full flex flex-col items-center justify-center px-4">
-    <div class="glass p-8 rounded-3xl w-full max-w-md text-center">
-        <h2 class="serif text-2xl font-bold mb-6 text-white">Masukkan NISN Anda</h2>
+    <!-- Section: Login -->
+    <section id="section-login" class="hidden w-full max-w-md mt-20">
+      <div class="glass p-8 rounded-3xl text-center">
+        <h2 class="serif text-2xl font-bold mb-6">Input NISN Siswa</h2>
         <form id="form-nisn" class="space-y-4">
-            <input type="text" id="input-nisn" maxlength="10" placeholder="10 digit NISN" class="w-full px-4 py-4 rounded-xl bg-white text-slate-900 font-bold text-center text-xl outline-none border-4 border-transparent focus:border-amber-400 transition-all">
-            <p id="error-msg" class="text-red-400 text-sm hidden">NISN tidak ditemukan</p>
-            <button type="submit" class="btn-gradient w-full py-4 rounded-xl font-bold text-lg">Verifikasi Data</button>
+          <input type="text" id="input-nisn" maxlength="10" placeholder="10 Digit NISN" class="w-full px-4 py-4 rounded-xl bg-white text-slate-900 font-bold text-center text-xl outline-none">
+          <button type="submit" class="btn-gradient w-full py-4 rounded-xl font-bold">Periksa Kelulusan</button>
         </form>
-        <button onclick="location.reload()" class="mt-6 text-violet-300/50 text-sm underline">Kembali ke Countdown</button>
-    </div>
-  </main>
+        <p id="error-msg" class="text-red-400 mt-4 hidden">NISN tidak ditemukan!</p>
+      </div>
+    </section>
 
-  <!-- SECTION 3: RESULT (Hidden by default) -->
-  <main id="section-result" class="hidden relative z-10 w-full min-h-full flex flex-col items-center justify-center px-4">
-    <div id="result-card" class="glass p-10 rounded-3xl w-full max-w-2xl text-center">
-        <!-- Content injected by JS -->
+    <!-- Section: Result -->
+    <section id="section-result" class="hidden w-full max-w-2xl mt-20">
+      <div id="result-card" class="glass p-10 rounded-3xl text-center"></div>
+    </section>
+  </div>
+
+  <!-- ADMIN BUTTON (LOCK ICON) -->
+  <div class="fixed bottom-4 right-4 z-50">
+    <button onclick="openAdmin()" class="p-3 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 transition-all text-white/20 hover:text-white/60">
+      <i data-lucide="lock" class="w-4 h-4"></i>
+    </button>
+  </div>
+
+  <!-- ADMIN PANEL MODAL -->
+  <div id="admin-panel" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="glass w-full max-w-md p-8 rounded-3xl relative">
+      <button onclick="closeAdmin()" class="absolute top-4 right-4 opacity-50 hover:opacity-100"><i data-lucide="x" class="w-6 h-6"></i></button>
+      <h2 class="serif text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="settings" class="w-5 h-5 text-amber-400"></i> Pengaturan Sistem</h2>
+      
+      <div class="space-y-4 text-left">
+        <div>
+          <label class="text-xs text-violet-300 uppercase font-bold">Link CSV Google Sheets</label>
+          <input type="text" id="admin-csv" class="w-full mt-1 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm outline-none focus:border-amber-400">
+        </div>
+        <div>
+          <label class="text-xs text-violet-300 uppercase font-bold">Tanggal & Waktu Buka (YYYY-MM-DD HH:MM)</label>
+          <input type="datetime-local" id="admin-date" class="w-full mt-1 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm outline-none focus:border-amber-400">
+        </div>
+        <button onclick="saveAdminSettings()" class="btn-gradient w-full py-3 rounded-xl font-bold mt-4">Simpan Perubahan</button>
+        <p class="text-[10px] text-center opacity-40">Perubahan disimpan di browser ini (Local Storage)</p>
+      </div>
     </div>
-  </main>
+  </div>
 
   <script>
-    // --- CONFIGURATION ---
-    const SHEET_ID = '2PACX-1vQ7dKWe0slwGrGr6Q58QYTP1Plyh9_pv9jbPnh1Xo44mXmJfsHyQfQtPoKo50c1yw';
-    const CSV_URL = `https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pub?output=csv`;
-    const TARGET_DATE = new Date("2026-05-04T15:00:00"); // Ganti tanggal buka di sini
+    // --- LOAD SAVED SETTINGS OR DEFAULT ---
+    let config = {
+      csv: localStorage.getItem('cfg_csv') || 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7dKWe0slwGrGr6Q58QYTP1Plyh9_pv9jbPnh1Xo44mXmJfsHyQfQtPoKo50c1yw/pub?output=csv',
+      target: localStorage.getItem('cfg_date') || '2026-05-04T15:00:00'
+    };
 
     let studentsData = [];
-
-    // --- STARFIELD ---
-    function initStars() {
-        const field = document.getElementById('starfield');
-        for (let i = 0; i < 50; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.width = star.style.height = (Math.random() * 2 + 1) + 'px';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = Math.random() * 100 + '%';
-            star.style.animationDelay = Math.random() * 3 + 's';
-            field.appendChild(star);
-        }
+    
+    // --- ADMIN LOGIC ---
+    function openAdmin() {
+      const pass = prompt("Masukkan Password Admin:");
+      if (pass === "admin123") { // Password default
+        document.getElementById('admin-csv').value = config.csv;
+        document.getElementById('admin-date').value = config.target.substring(0, 16);
+        document.getElementById('admin-panel').classList.remove('hidden');
+      } else if (pass !== null) {
+        alert("Password Salah!");
+      }
     }
 
-    // --- COUNTDOWN LOGIC ---
-    function updateCountdown() {
-        const now = new Date();
-        const diff = TARGET_DATE - now;
-        const btn = document.getElementById('btn-to-login');
+    function closeAdmin() { document.getElementById('admin-panel').classList.add('hidden'); }
 
-        if (diff <= 0) {
-            document.getElementById('days').innerText = '00';
-            document.getElementById('hours').innerText = '00';
-            document.getElementById('minutes').innerText = '00';
-            document.getElementById('seconds').innerText = '00';
-            
-            // Activate Button
-            btn.disabled = false;
-            btn.classList.remove('opacity-50', 'cursor-not-allowed');
-            btn.classList.add('btn-gradient', 'text-slate-900', 'border-transparent');
-            btn.innerHTML = `<i data-lucide="unlock" class="w-5 h-5"></i> <span>Buka Pengumuman Sekarang</span>`;
-            lucide.createIcons();
-            return;
-        }
-
-        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const m = Math.floor((diff / (1000 * 60)) % 60);
-        const s = Math.floor((diff / 1000) % 60);
-
-        document.getElementById('days').innerText = String(d).padStart(2, '0');
-        document.getElementById('hours').innerText = String(h).padStart(2, '0');
-        document.getElementById('minutes').innerText = String(m).padStart(2, '0');
-        document.getElementById('seconds').innerText = String(s).padStart(2, '0');
+    function saveAdminSettings() {
+      const newCsv = document.getElementById('admin-csv').value;
+      const newDate = document.getElementById('admin-date').value;
+      
+      localStorage.setItem('cfg_csv', newCsv);
+      localStorage.setItem('cfg_date', newDate);
+      alert("Pengaturan Berhasil Disimpan! Halaman akan dimuat ulang.");
+      location.reload();
     }
 
-    // --- DATA LOGIC ---
+    // --- APP LOGIC ---
     async function loadData() {
-        try {
-            const res = await fetch(CSV_URL);
-            const text = await res.text();
-            const rows = text.split('\n').slice(1);
-            studentsData = rows.map(r => {
-                const c = r.split(',');
-                return { nisn: c[2]?.trim(), nama: c[3]?.trim(), status: c[9]?.trim(), skl: c[10]?.trim() };
-            });
-        } catch (e) { console.error("Data Load Error"); }
+      try {
+        const res = await fetch(config.csv);
+        const text = await res.text();
+        const rows = text.split('\n').slice(1);
+        studentsData = rows.map(r => {
+          const c = r.split(',');
+          return { nisn: c[2]?.trim(), nama: c[3]?.trim(), status: c[9]?.trim(), skl: c[10]?.trim() };
+        });
+      } catch (e) { console.error("Gagal memuat CSV"); }
     }
 
-    // --- NAVIGATION ---
+    function updateCountdown() {
+      const diff = new Date(config.target) - new Date();
+      const btn = document.getElementById('btn-to-login');
+
+      if (diff <= 0) {
+        btn.disabled = false;
+        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+        btn.classList.add('btn-gradient', 'text-slate-900');
+        document.getElementById('btn-text').innerText = "Cek Hasil Kelulusan Sekarang";
+        return;
+      }
+
+      const d = Math.floor(diff / 864e5), h = Math.floor((diff % 864e5) / 36e5), m = Math.floor((diff % 36e5) / 6e4), s = Math.floor((diff % 6e4) / 1e3);
+      document.getElementById('days').innerText = String(d).padStart(2, '0');
+      document.getElementById('hours').innerText = String(h).padStart(2, '0');
+      document.getElementById('minutes').innerText = String(m).padStart(2, '0');
+      document.getElementById('seconds').innerText = String(s).padStart(2, '0');
+    }
+
+    // --- NAVIGATION & UI ---
     document.getElementById('btn-to-login').onclick = () => {
-        document.getElementById('section-countdown').classList.add('hidden');
-        document.getElementById('section-login').classList.remove('hidden');
+      document.getElementById('section-countdown').classList.add('hidden');
+      document.getElementById('section-login').classList.remove('hidden');
     };
 
     document.getElementById('form-nisn').onsubmit = (e) => {
-        e.preventDefault();
-        const input = document.getElementById('input-nisn').value.trim();
-        const student = studentsData.find(s => s.nisn === input);
-
-        if (student) {
-            showResult(student);
-        } else {
-            const err = document.getElementById('error-msg');
-            err.classList.remove('hidden');
-            setTimeout(() => err.classList.add('hidden'), 3000);
-        }
-    };
-
-    function showResult(s) {
-        const isPassed = s.status?.toUpperCase() === 'LULUS';
+      e.preventDefault();
+      const input = document.getElementById('input-nisn').value.trim();
+      const s = studentsData.find(x => x.nisn === input);
+      if (s) {
         document.getElementById('section-login').classList.add('hidden');
         document.getElementById('section-result').classList.remove('hidden');
-
-        const card = document.getElementById('result-card');
-        card.innerHTML = `
-            <h3 class="text-violet-300 uppercase tracking-widest text-sm mb-2">HASIL KELULUSAN</h3>
-            <h2 class="serif text-4xl font-bold mb-6 ${isPassed ? 'text-lulus' : 'text-gagal'}">
-                ${isPassed ? 'LULUS' : 'BELUM LULUS'}
-            </h2>
-            <div class="space-y-2 mb-8 text-lg">
-                <p><span class="text-violet-300/60">Nama:</span> <span class="font-bold">${s.nama}</span></p>
-                <p><span class="text-violet-300/60">NISN:</span> <span class="mono">${s.nisn}</span></p>
-            </div>
-            ${isPassed && s.skl ? `
-                <a href="${s.skl}" target="_blank" class="btn-gradient inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold">
-                    <i data-lucide="download" class="w-5 h-5"></i> Unduh SKL (PDF)
-                </a>
-            ` : ''}
-            <button onclick="location.reload()" class="block w-full mt-8 text-violet-300/40 text-sm">Kembali ke Beranda</button>
+        const isLulus = s.status?.toUpperCase() === 'LULUS';
+        document.getElementById('result-card').innerHTML = `
+          <h2 class="serif text-4xl font-bold mb-4 ${isLulus ? 'text-green-400' : 'text-red-400'}">${isLulus ? 'LULUS' : 'BELUM LULUS'}</h2>
+          <p class="text-xl mb-6">${s.nama}<br><span class="opacity-50">${s.nisn}</span></p>
+          ${isLulus && s.skl ? `<a href="${s.skl}" target="_blank" class="btn-gradient px-8 py-3 rounded-xl font-bold inline-block">Download SKL</a>` : ''}
+          <button onclick="location.reload()" class="block w-full mt-8 opacity-30 text-sm italic">Kembali</button>
         `;
         lucide.createIcons();
+      } else {
+        document.getElementById('error-msg').classList.remove('hidden');
+      }
+    };
+
+    // --- STARFIELD ---
+    const field = document.getElementById('starfield');
+    for (let i = 0; i < 60; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.width = star.style.height = (Math.random() * 2 + 1) + 'px';
+      star.style.left = Math.random() * 100 + '%'; star.style.top = Math.random() * 100 + '%';
+      star.style.animationDelay = Math.random() * 3 + 's';
+      field.appendChild(star);
     }
 
-    // --- INIT ---
-    initStars();
     loadData();
-    updateCountdown();
     setInterval(updateCountdown, 1000);
     lucide.createIcons();
   </script>
