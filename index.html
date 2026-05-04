@@ -61,6 +61,7 @@
     }
     @keyframes pulse-ring { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(2.5); opacity: 0; } }
 
+    /* Overlay Hitung Mundur Dramatis */
     #countdown-overlay {
       background: rgba(10, 14, 39, 0.98);
       display: none; align-items: center; justify-content: center; z-index: 200;
@@ -73,9 +74,11 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
+  <!-- Background Components -->
   <div class="aurora"></div>
   <div id="starfield" class="starfield"></div>
 
+  <!-- OVERLAY HITUNG MUNDUR -->
   <div id="countdown-overlay" class="fixed inset-0">
     <div id="number-display" class="count-number serif text-amber-400">3</div>
   </div>
@@ -97,8 +100,8 @@
     <!-- SECTION 1: COUNTDOWN LANDING -->
     <section id="section-countdown" class="w-full max-w-4xl text-center">
       <h1 class="serif text-4xl sm:text-6xl font-semibold mb-2">
-        <span class="block text-white">Menunggu</span>
-        <span class="block gradient-text italic">Pengumuman Kelulusan</span>
+        <span class="block text-white">Momen itu akan</span>
+        <span class="block gradient-text italic">segera tiba.</span>
       </h1>
       <p class="text-violet-200/70 mb-10">Tahun Pelajaran 2025/2026</p>
 
@@ -134,7 +137,7 @@
       </div>
     </section>
 
-    <!-- SECTION 3: RESULT -->
+    <!-- SECTION 3: RESULT (HASIL) -->
     <section id="section-result" class="hidden w-full max-w-2xl">
       <div id="result-card" class="glass p-10 rounded-[3rem] text-center shadow-2xl"></div>
     </section>
@@ -151,6 +154,7 @@
   </div>
 
   <script>
+    // Konfigurasi Awal
     let config = {
       csv: localStorage.getItem('cfg_csv') || 'URL_LINK_CSV_ANDA',
       target: localStorage.getItem('cfg_date') || '2026-05-04T15:00:00',
@@ -161,7 +165,7 @@
     let studentsData = [];
     const audioBeep = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
 
-    // Starfield Generator
+    // Generate Bintang
     const field = document.getElementById('starfield');
     for (let i = 0; i < 80; i++) {
       const star = document.createElement('div');
@@ -181,7 +185,7 @@
           const c = r.split(',');
           return { nisn: c[2]?.trim(), nama: c[3]?.trim(), jurusan: c[8]?.trim(), status: c[9]?.trim(), skl: c[10]?.trim() };
         });
-      } catch (e) { console.error("Database Connection Failed"); }
+      } catch (e) { console.error("Database Error"); }
     }
 
     function updateCountdown() {
