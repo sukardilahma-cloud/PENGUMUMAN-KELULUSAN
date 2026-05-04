@@ -29,7 +29,7 @@
       z-index: 200;
     }
     .count-number {
-      font-size: 12rem;
+      font-size: 15rem;
       font-weight: 800;
       animation: zoomFade 1s ease-in-out infinite;
     }
@@ -100,16 +100,19 @@
     </section>
   </div>
 
+  <!-- Footer -->
   <footer class="relative z-10 w-full py-8 text-center text-slate-500 text-xs border-t border-white/5 bg-black/20">
     <p>© 2026 SMK Negeri 1 Kotamobagu. Sistem Pengumuman Kelulusan</p>
   </footer>
 
+  <!-- TOMBOL ADMIN -->
   <div class="fixed bottom-4 right-4 z-50">
     <button onclick="openAdmin()" class="p-3 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 transition-all text-white/20 hover:text-white/60">
       <i data-lucide="lock" class="w-4 h-4"></i>
     </button>
   </div>
 
+  <!-- PANEL ADMIN -->
   <div id="admin-panel" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
     <div class="glass w-full max-w-md p-8 rounded-3xl relative overflow-y-auto max-h-[90vh]">
       <button onclick="closeAdmin()" class="absolute top-4 right-4 opacity-50 hover:opacity-100"><i data-lucide="x" class="w-6 h-6"></i></button>
@@ -163,22 +166,11 @@
       try {
         const res = await fetch(config.csv);
         const text = await res.text();
-        
-        // PERBAIKAN UNTUK MOBILE: split baris lebih akurat & filter baris kosong
-        const rows = text.split(/\r?\n/).filter(row => row.trim() !== "");
-        
-        studentsData = rows.slice(1).map(r => {
-          // PERBAIKAN UNTUK MOBILE: trim setiap kolom & hapus tanda kutip ganda otomatis
-          const c = r.split(',').map(item => item.trim().replace(/^"|"$/g, ''));
-          return { 
-            nisn: c[2], 
-            nama: c[3], 
-            jurusan: c[8], 
-            status: c[9], 
-            skl: c[10] 
-          };
+        const rows = text.split('\n').slice(1);
+        studentsData = rows.map(r => {
+          const c = r.split(',');
+          return { nisn: c[2]?.trim(), nama: c[3]?.trim(), jurusan: c[8]?.trim(), status: c[9]?.trim(), skl: c[10]?.trim() };
         });
-        console.log("Data loaded:", studentsData.length);
       } catch (e) { console.error("Database connection failed"); }
     }
 
@@ -221,18 +213,11 @@
       overlay.style.display = 'flex';
       let count = 3;
       display.innerText = count;
-      audioBeep.play().catch(() => {}); // Hindari error jika browser blokir audio otomatis
+      audioBeep.play();
       const timer = setInterval(() => {
         count--;
-        if (count > 0) { 
-          display.innerText = count; 
-          audioBeep.play().catch(() => {}); 
-        }
-        else { 
-          clearInterval(timer); 
-          overlay.style.display = 'none'; 
-          callback(); 
-        }
+        if (count > 0) { display.innerText = count; audioBeep.play(); }
+        else { clearInterval(timer); overlay.style.display = 'none'; callback(); }
       }, 1000);
     }
 
@@ -251,10 +236,7 @@
       document.getElementById('section-login').classList.add('hidden');
       document.getElementById('section-result').classList.remove('hidden');
       const isLulus = s.status?.toUpperCase() === 'LULUS';
-      if(isLulus) { 
-        audioSuccess.play().catch(() => {});
-        celebrate(); 
-      }
+      if(isLulus) { audioSuccess.play(); celebrate(); }
 
       document.getElementById('result-card').innerHTML = `
         <div class="mb-6"><i data-lucide="${isLulus ? 'party-popper' : 'frown'}" class="w-20 h-20 mx-auto ${isLulus ? 'text-green-400' : 'text-red-400'}"></i></div>
