@@ -7,7 +7,6 @@
   
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
-  <!-- Library Animasi Perayaan -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   
@@ -45,19 +44,18 @@
 <body class="h-full">
   <div id="starfield" class="fixed inset-0 pointer-events-none"></div>
 
-  <!-- OVERLAY HITUNG MUNDUR -->
   <div id="countdown-overlay" class="fixed inset-0">
     <div id="number-display" class="count-number serif text-amber-400">3</div>
   </div>
 
   <div id="app-container" class="relative z-10 min-h-full flex flex-col items-center px-4 py-12">
-    <!-- Section: Countdown Landing -->
+    <!-- Section: Countdown -->
     <section id="section-countdown" class="w-full max-w-3xl text-center">
       <img id="display-logo" src="" class="w-24 mx-auto mb-8" alt="Logo">
       <header class="inline-block rounded-full px-4 py-2 mb-8 border border-amber-400/30 bg-amber-400/10">
         <span id="display-school-name" class="text-xs sm:text-sm font-medium text-amber-100"></span>
       </header>
-      <h1 class="serif text-4xl sm:text-6xl font-bold mb-4 text-white">Sebentar lagi,<br><span class="text-amber-400 italic">momen itu tiba</span></h1>
+      <h1 class="serif text-4xl sm:text-6xl font-bold mb-4">Sebentar lagi,<br><span class="text-amber-400 italic">momen itu tiba</span></h1>
       <div class="glass rounded-3xl p-8 my-10">
         <div class="grid grid-cols-4 gap-4">
           <div class="text-center"><div class="mono text-3xl sm:text-5xl font-bold" id="days">00</div><p class="text-xs opacity-50 uppercase mt-2">Hari</p></div>
@@ -89,28 +87,6 @@
     </section>
   </div>
 
-  <!-- ADMIN BUTTON -->
-  <div class="fixed bottom-4 right-4 z-50">
-    <button onclick="openAdmin()" class="p-3 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 transition-all text-white/20 hover:text-white/60">
-      <i data-lucide="lock" class="w-4 h-4"></i>
-    </button>
-  </div>
-
-  <!-- ADMIN PANEL -->
-  <div id="admin-panel" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-    <div class="glass w-full max-w-md p-8 rounded-3xl relative overflow-y-auto max-h-[90vh]">
-      <button onclick="closeAdmin()" class="absolute top-4 right-4 opacity-50 hover:opacity-100"><i data-lucide="x" class="w-6 h-6"></i></button>
-      <h2 class="serif text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="settings" class="w-5 h-5 text-amber-400"></i> Pengaturan</h2>
-      <div class="space-y-4 text-left">
-        <input type="text" id="admin-school-name" placeholder="Nama Sekolah" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm">
-        <input type="text" id="admin-logo-url" placeholder="Link Logo URL" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm">
-        <input type="text" id="admin-csv" placeholder="Link CSV Google Sheets" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm">
-        <input type="datetime-local" id="admin-date" class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm">
-        <button onclick="saveAdminSettings()" class="btn-gradient w-full py-3 rounded-xl font-bold">Simpan</button>
-      </div>
-    </div>
-  </div>
-
   <script>
     let config = {
       csv: localStorage.getItem('cfg_csv') || 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7dKWe0slwGrGr6Q58QYTP1Plyh9_pv9jbPnh1Xo44mXmJfsHyQfQtPoKo50c1yw/pub?output=csv',
@@ -126,24 +102,6 @@
     document.getElementById('display-school-name').innerText = config.schoolName;
     document.getElementById('display-logo').src = config.logoUrl;
 
-    function openAdmin() {
-      if (prompt("Password Admin:") === "admin123") {
-        document.getElementById('admin-school-name').value = config.schoolName;
-        document.getElementById('admin-logo-url').value = config.logoUrl;
-        document.getElementById('admin-csv').value = config.csv;
-        document.getElementById('admin-date').value = config.target.substring(0, 16);
-        document.getElementById('admin-panel').classList.remove('hidden');
-      }
-    }
-    function closeAdmin() { document.getElementById('admin-panel').classList.add('hidden'); }
-    function saveAdminSettings() {
-      localStorage.setItem('cfg_name', document.getElementById('admin-school-name').value);
-      localStorage.setItem('cfg_logo', document.getElementById('admin-logo-url').value);
-      localStorage.setItem('cfg_csv', document.getElementById('admin-csv').value);
-      localStorage.setItem('cfg_date', document.getElementById('admin-date').value);
-      location.reload();
-    }
-
     async function loadData() {
       try {
         const res = await fetch(config.csv);
@@ -151,7 +109,13 @@
         const rows = text.split('\n').slice(1);
         studentsData = rows.map(r => {
           const c = r.split(',');
-          return { nisn: c[2]?.trim(), nama: c[3]?.trim(), status: c[9]?.trim(), skl: c[10]?.trim() };
+          return { 
+            nisn: c[2]?.trim(), 
+            nama: c[3]?.trim(), 
+            jurusan: c[8]?.trim(), // Kolom I (Indeks 8) di Spreadsheet
+            status: c[9]?.trim(), 
+            skl: c[10]?.trim() 
+          };
         });
       } catch (e) { console.error("CSV Error"); }
     }
@@ -197,51 +161,20 @@
       audioBeep.play();
       const timer = setInterval(() => {
         count--;
-        if (count > 0) {
-          display.innerText = count;
-          audioBeep.play();
-        } else {
-          clearInterval(timer);
-          overlay.style.display = 'none';
-          callback();
-        }
+        if (count > 0) { display.innerText = count; audioBeep.play(); }
+        else { clearInterval(timer); overlay.style.display = 'none'; callback(); }
       }, 1000);
     }
 
-    // --- FUNGSI ANIMASI PERAYAAN ---
     function celebrate() {
       const duration = 3 * 1000;
       const end = Date.now() + duration;
-
       (function frame() {
-        confetti({
-          particleCount: 5,
-          angle: 60,
-          spread: 55,
-          origin: { x: 0 },
-          colors: ['#fbbf24', '#ffffff', '#4ade80']
-        });
-        confetti({
-          particleCount: 5,
-          angle: 120,
-          spread: 55,
-          origin: { x: 1 },
-          colors: ['#fbbf24', '#ffffff', '#4ade80']
-        });
-
-        if (Date.now() < end) {
-          requestAnimationFrame(frame);
-        }
+        confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#fbbf24', '#ffffff', '#4ade80'] });
+        confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#fbbf24', '#ffffff', '#4ade80'] });
+        if (Date.now() < end) requestAnimationFrame(frame);
       }());
-      
-      // Ledakan Bintang Tengah
-      confetti({
-        particleCount: 150,
-        spread: 70,
-        origin: { y: 0.6 },
-        shapes: ['star'],
-        colors: ['#fbbf24', '#ffffff']
-      });
+      confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, shapes: ['star'], colors: ['#fbbf24', '#ffffff'] });
     }
 
     function showResult(s) {
@@ -249,10 +182,7 @@
       document.getElementById('section-result').classList.remove('hidden');
       const isLulus = s.status?.toUpperCase() === 'LULUS';
       
-      if(isLulus) {
-        audioSuccess.play();
-        celebrate(); // Panggil animasi bintang & bunga api
-      }
+      if(isLulus) { audioSuccess.play(); celebrate(); }
 
       document.getElementById('result-card').innerHTML = `
         <div class="mb-4">
@@ -264,11 +194,21 @@
         ` : `
           <h2 class="serif text-5xl font-black text-red-400 mb-6 tracking-wider">BELUM LULUS</h2>
         `}
-        <div class="bg-white/5 rounded-2xl p-6 mb-8 border border-white/10">
-          <p class="text-violet-300 text-sm uppercase tracking-widest mb-1">Nama Siswa</p>
-          <p class="text-2xl font-bold text-white mb-4">${s.nama}</p>
-          <p class="text-violet-300 text-sm uppercase tracking-widest mb-1">NISN</p>
-          <p class="mono text-xl text-white/80">${s.nisn}</p>
+        <div class="bg-white/5 rounded-2xl p-6 mb-8 border border-white/10 text-left">
+          <div class="mb-4">
+            <p class="text-violet-300 text-[10px] uppercase tracking-widest mb-1">Nama Lengkap</p>
+            <p class="text-xl font-bold text-white">${s.nama}</p>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <p class="text-violet-300 text-[10px] uppercase tracking-widest mb-1">NISN</p>
+              <p class="mono text-lg text-white/80">${s.nisn}</p>
+            </div>
+            <div>
+              <p class="text-violet-300 text-[10px] uppercase tracking-widest mb-1">Konsentrasi Keahlian</p>
+              <p class="text-lg font-semibold text-amber-400">${s.jurusan || '-'}</p>
+            </div>
+          </div>
         </div>
         ${isLulus && s.skl ? `
           <a href="${s.skl}" target="_blank" class="btn-gradient px-10 py-4 rounded-xl font-bold inline-flex items-center gap-2 transform hover:scale-105 transition-all">
